@@ -1,0 +1,43 @@
+const { buildSchema } = require('graphql');
+
+module.exports = buildSchema(`
+        type Product {
+            _id: ID!
+            name: String!
+            description: String!
+            minQuantity: Int!
+            quantity: Float!
+        }
+
+        type User {
+            _id: ID!
+            userName: String!
+            password: String
+        }
+        
+        input ProductInput {
+            name: String!
+            description: String!
+            minQuantity: Int!
+            quantity: Float!
+        }
+
+        input UserInput {
+            userName: String!
+            password: String!
+        }
+
+        type RootQuery {
+            products: [Product!]!
+        }
+
+        type RootMutation {
+            createProduct(productInput: ProductInput): Product
+            createUser(userInput: UserInput): User
+        }
+
+        schema {
+            query: RootQuery,
+            mutation: RootMutation
+        }
+    `)
