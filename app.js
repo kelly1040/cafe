@@ -9,9 +9,12 @@ const getSchemas = require('./graphql/schema');
 
 const Product = require('./models/product');
 const User = require('./models/user');
+const cors = require('cors');
 
 // Create express app 
 const app = express();
+
+app.use(cors());
 
 const products = [];
 
@@ -74,10 +77,11 @@ app.use('/graphql', graphqlHttp({
     graphiql: true
 }));
 
+
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}
 @atlascluster.re2m0ox.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`)
 .then(() => {
-    app.listen(3000);
+    app.listen(3001);
 })
 .catch(err => {
     console.log(err);

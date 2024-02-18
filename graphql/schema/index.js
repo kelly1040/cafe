@@ -34,6 +34,8 @@ module.exports = buildSchema(`
         type RootMutation {
             createProduct(productInput: ProductInput): Product
             createUser(userInput: UserInput): User
+            updateProduct(id: ID!, productInput: ProductInput): Product
+            deleteProduct(id: ID!): Product
         }
 
         schema {
