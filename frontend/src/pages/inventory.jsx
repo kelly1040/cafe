@@ -11,7 +11,6 @@ const GET_PRODUCTS = gql`
   }
 `;
 
-
 function DisplayProducts() {
     const { loading, error, data } = useQuery(GET_PRODUCTS);
     if (loading) return <p>Loading...</p>;
