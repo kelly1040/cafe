@@ -61,7 +61,7 @@ const TableCell = ({ getValue, row, column, table }) => {
   return <span>{value}</span>
 }
 
-const EditCell = ({ row, table ,updateProductQuantity}) => {
+const EditCell = ({ row, table, updateProductQuantity }) => {
   const meta = table.options.meta;
 
   const setEditedRows = () => {
@@ -91,7 +91,7 @@ const EditCell = ({ row, table ,updateProductQuantity}) => {
       Update
     </button>
   );
-}
+};
 
 function Table({ data }) {
   const columnHelper = createColumnHelper();
@@ -111,7 +111,9 @@ function Table({ data }) {
 
   const [tableData, setTableData] = useState(() => [...data]);
   const [editedRows, setEditedRows] = useState({});
-  const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY);
+  const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY, {
+    refetchQueries: [{ query: GET_PRODUCTS }],
+  });
 
   useEffect(() => {
     setTableData(data);
