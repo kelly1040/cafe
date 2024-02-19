@@ -22,10 +22,16 @@ module.exports = buildSchema(`
             quantity: Float!
         }
 
+        input ProductQuantityUpdate {
+            quantity: Float!
+        }
+
         input UserInput {
             userName: String!
             password: String!
         }
+    
+
 
         type RootQuery {
             products: [Product!]!
@@ -34,8 +40,7 @@ module.exports = buildSchema(`
         type RootMutation {
             createProduct(productInput: ProductInput): Product
             createUser(userInput: UserInput): User
-            updateProduct(id: ID!, productInput: ProductInput): Product
-            deleteProduct(id: ID!): Product
+            updateProductQuantity(id: ID!, quantityUpdate: ProductQuantityUpdate): Product
         }
 
         schema {

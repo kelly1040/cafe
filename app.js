@@ -52,6 +52,21 @@ app.use('/graphql', graphqlHttp({
                 throw err;
             });
         },
+        updateProductQuantity: (args) => {
+            return Product.findById(args.id).then(product => {
+                if (!product) {
+                    throw new Error('Product not found');
+                }
+                product.quantity = args.quantityUpdate.quantity;
+                return product.save();
+            }).then(result => { 
+                return {...result._doc, _id: result.id};
+            }
+            ).catch(err => {
+                console.log(err);
+                throw err;
+            });
+        },
         createUser: (args) => {
             return User.findOne({userName: args.userInput.userName}).then(user => {
                 if (user) {

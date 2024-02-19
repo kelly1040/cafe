@@ -1,5 +1,5 @@
 
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql, useMutation } from '@apollo/client';
 
 const GET_PRODUCTS = gql`
   query getProducts {
@@ -11,12 +11,13 @@ const GET_PRODUCTS = gql`
   }
 `;
 
+
 function DisplayProducts() {
     const { loading, error, data } = useQuery(GET_PRODUCTS);
-    console.log(useQuery(GET_PRODUCTS));
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error : {error.message}</p>;
     return (
+      <div>
       <table>
         <thead>
           <tr>
@@ -33,6 +34,7 @@ function DisplayProducts() {
           ))}
         </tbody>
       </table>
+      </div>
    );
   }
 
