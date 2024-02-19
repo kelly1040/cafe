@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-table";
 import { useQuery, useMutation, gql } from '@apollo/client';
 
+//graphql queries
 const GET_PRODUCTS = gql`
   query getProducts {
     products {
@@ -40,6 +41,16 @@ const TableCell = ({ getValue, row, column, table }) => {
     setValue(e.target.value)
     tableMeta?.updateData(row.index, column.id, e.target.value)
   }
+  const onIncrement = () => {
+    setValue((prevValue) => prevValue + 1);
+    tableMeta?.updateData(row.index, column.id, value + 1);
+  }
+  const onDecrement = () => {
+    if (value > 0) {
+      setValue((prevValue) => prevValue - 1);
+      tableMeta?.updateData(row.index, column.id, value - 1);
+    }
+  }
   if (tableMeta?.editedRows[row.id]) {
     return columnMeta?.type === "select" ? (
       <select onChange={onSelectChange} value={initialValue}>
@@ -50,12 +61,16 @@ const TableCell = ({ getValue, row, column, table }) => {
         ))}
       </select>
     ) : (
-      <input
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        onBlur={onBlur}
-        type={columnMeta?.type || "text"}
-      />
+      <div>
+        <button onClick={onDecrement}>-</button>
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={onBlur}
+          type={columnMeta?.type || "text"}
+        />
+        <button onClick={onIncrement}>+</button>
+      </div>
     )
   }
   return <span>{value}</span>
@@ -93,6 +108,7 @@ const EditCell = ({ row, table, updateProductQuantity }) => {
   );
 };
 
+// Table component, renders the table
 function Table({ data }) {
   const columnHelper = createColumnHelper();
   const columns = [
@@ -101,7 +117,7 @@ function Table({ data }) {
     }),
     columnHelper.accessor("quantity", {
       header: "Quantity",
-      cell: TableCell,
+      cell: (props) => <TableCell {...props} updateProductQuantity={updateProductQuantity} />,
     }),
     columnHelper.display({
       id: "edit",
