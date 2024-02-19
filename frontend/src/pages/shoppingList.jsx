@@ -1,4 +1,4 @@
-import { useState, useEffect  } from "react";
+import { useState, useEffect, useMutation  } from "react";
 
 import {
   createColumnHelper,
@@ -19,23 +19,72 @@ const GET_PRODUCTS = gql`
   }
 `;
 
+const UPDATE_PRODUCT_QUANTITY = gql`
+    mutation updateProductQuantity($id: ID!, $quantity: Float!) {
+        updateProductQuantity(id: $id, quantityUpdate: {quantity: $quantity}) {
+            quantity
+        }
+    }
+`;
+
 const TableCell = ({ getValue, row, column, table }) => {
-    const initialValue = getValue();
-    const [value, setValue] = useState(initialValue);
+    const initialValue = getValue()
+    const columnMeta = column.columnDef.meta
+    const tableMeta = table.options.meta
+    const [value, setValue] = useState(initialValue)
     useEffect(() => {
-      setValue(initialValue);
-    }, [initialValue]);
+      setValue(initialValue)
+    }, [initialValue])
     const onBlur = () => {
-      table.options.meta?.updateData(row.index, column.id, value);
-    };
-    return (
-      <input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onBlur={onBlur}
-      />
-    );
-  };
+      tableMeta?.updateData(row.index, column.id, value)
+    }
+    const onSelectChange = (e) => {
+      setValue(e.target.value)
+      tableMeta?.updateData(row.index, column.id, e.target.value)
+    }
+    if (tableMeta?.editedRows[row.id]) {
+      return columnMeta?.type === "select" ? (
+        <select onChange={onSelectChange} value={initialValue}>
+          {columnMeta?.options?.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <input
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          onBlur={onBlur}
+          type={columnMeta?.type || "text"}
+        />
+      )
+    }
+    return <span>{value}</span>
+  }
+
+  const EditCell = ({ row, table }) => {
+    const meta = table.options.meta
+    const setEditedRows = (e) => {
+        const elName = e.currentTarget.name
+      meta?.setEditedRows((old) => ({
+        ...old,
+        [row.id]: !old[row.id],
+      }))
+    }
+    return meta?.editedRows[row.id] ? (
+        <>
+          <button onClick={setEditedRows} name="done">
+            Done
+          </button>
+        </>
+      ) : (
+        <button onClick={setEditedRows} name="edit">
+          Update
+        </button>
+      )
+  }
+  
 
 function Table({data}){
         const columnHelper = createColumnHelper();
@@ -47,9 +96,14 @@ function Table({data}){
             header: "Quantity",
             cell: TableCell,
           }),
-          // Add other columns as needed
+          columnHelper.display({
+            id: "edit",
+            cell: EditCell,
+          }),
+ 
         ];
         const [tableData, setTableData] = useState(() => [...data]);
+        const [editedRows, setEditedRows] = useState({});
         useEffect(() => {
             setTableData(data);
           }, [data]);
@@ -59,6 +113,8 @@ function Table({data}){
             columns,
             getCoreRowModel: getCoreRowModel(),
             meta: {
+                editedRows,
+                setEditedRows,
                 updateData: (rowIndex, columnId, value) => {
                   setTableData((old) =>
                     old.map((row, index) => {
