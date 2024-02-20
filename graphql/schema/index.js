@@ -31,10 +31,14 @@ module.exports = buildSchema(`
             password: String!
         }
     
+        input RequiredQuantity {
+            getQuantity: Float!
+        }
 
 
         type RootQuery {
             products: [Product!]!
+            getShoppingList: [Product]!
         }
 
         type RootMutation {

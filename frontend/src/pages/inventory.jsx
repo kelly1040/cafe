@@ -18,6 +18,17 @@ const GET_PRODUCTS = gql`
   }
 `;
 
+//graphql queries
+const GET_LIST = gql`
+  query getShoppingList {
+    getShoppingList {
+      _id
+      name
+      quantity
+    }
+  }
+`;
+
 const UPDATE_PRODUCT_QUANTITY = gql`
     mutation updateProductQuantity($id: ID!, $quantity: Float!) {
         updateProductQuantity(id: $id, quantityUpdate: {quantity: $quantity}) {
@@ -128,7 +139,7 @@ function Table({ data }) {
   const [tableData, setTableData] = useState(() => [...data]);
   const [editedRows, setEditedRows] = useState({});
   const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY, {
-    refetchQueries: [{ query: GET_PRODUCTS }],
+    refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }],
   });
 
   useEffect(() => {
@@ -192,8 +203,9 @@ function Table({ data }) {
 };
 
 export default function ShoppingList() {
-  const { loading, error, data } = useQuery(GET_PRODUCTS);
-
+  const { loading, error, data } = useQuery(GET_PRODUCTS, {
+    refetchQueries: [{ query: GET_PRODUCTS}, {query: GET_LIST }],
+  });
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 

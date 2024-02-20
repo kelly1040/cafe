@@ -7,6 +7,18 @@ import {
 } from "@tanstack/react-table";
 import { useQuery, useMutation, gql } from '@apollo/client';
 
+//graphql queries
+const GET_LIST = gql`
+  query getShoppingList {
+    getShoppingList {
+      _id
+      name
+      quantity
+    }
+  }
+`;
+
+//graphql queries
 const GET_PRODUCTS = gql`
   query getProducts {
     products {
@@ -40,6 +52,16 @@ const TableCell = ({ getValue, row, column, table }) => {
     setValue(e.target.value)
     tableMeta?.updateData(row.index, column.id, e.target.value)
   }
+  const onIncrement = () => {
+    setValue((prevValue) => prevValue + 1);
+    tableMeta?.updateData(row.index, column.id, value + 1);
+  }
+  const onDecrement = () => {
+    if (value > 0) {
+      setValue((prevValue) => prevValue - 1);
+      tableMeta?.updateData(row.index, column.id, value - 1);
+    }
+  }
   if (tableMeta?.editedRows[row.id]) {
     return columnMeta?.type === "select" ? (
       <select onChange={onSelectChange} value={initialValue}>
@@ -50,12 +72,16 @@ const TableCell = ({ getValue, row, column, table }) => {
         ))}
       </select>
     ) : (
-      <input
-        value={value}
-        onChange={e => setValue(e.target.value)}
-        onBlur={onBlur}
-        type={columnMeta?.type || "text"}
-      />
+      <div>
+        <button onClick={onDecrement}>-</button>
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onBlur={onBlur}
+          type={columnMeta?.type || "text"}
+        />
+        <button onClick={onIncrement}>+</button>
+      </div>
     )
   }
   return <span>{value}</span>
@@ -93,6 +119,7 @@ const EditCell = ({ row, table, updateProductQuantity }) => {
   );
 };
 
+// Table component, renders the table
 function Table({ data }) {
   const columnHelper = createColumnHelper();
   const columns = [
@@ -101,7 +128,7 @@ function Table({ data }) {
     }),
     columnHelper.accessor("quantity", {
       header: "Quantity",
-      cell: TableCell,
+      cell: (props) => <TableCell {...props} updateProductQuantity={updateProductQuantity} />,
     }),
     columnHelper.display({
       id: "edit",
@@ -112,7 +139,7 @@ function Table({ data }) {
   const [tableData, setTableData] = useState(() => [...data]);
   const [editedRows, setEditedRows] = useState({});
   const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY, {
-    refetchQueries: [{ query: GET_PRODUCTS }],
+    refetchQueries: [{ query: GET_LIST }, { query: GET_PRODUCTS }],
   });
 
   useEffect(() => {
@@ -176,15 +203,16 @@ function Table({ data }) {
 };
 
 export default function ShoppingList() {
-  const { loading, error, data } = useQuery(GET_PRODUCTS);
-
+  const { loading, error, data } = useQuery(GET_LIST, {
+    refetchQueries: [{ query: GET_LIST} , {query: GET_PRODUCTS}],
+  });
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
     <div>
       <h1>Shopping List</h1>
-      <Table data={data.products} />
+      <Table data={data.getShoppingList} />
     </div>
   );
 }

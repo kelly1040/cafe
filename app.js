@@ -37,6 +37,19 @@ app.use('/graphql', graphqlHttp({
                 throw err;
             })
         },
+        getShoppingList: () => {
+                return Product.find().then(
+                    products => {
+                        return products
+                        .filter(product => product.quantity < product.minQuantity)
+                        .map(product => ({ ...product._doc, _id: product.id }));
+                    }
+                ).catch(err => {
+                    console.log(err);
+                    throw err;
+                })
+            },
+
         createProduct: (args) => {
             const product = new Product({
                 name: args.productInput.name,
