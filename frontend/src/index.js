@@ -10,6 +10,7 @@ import {
 import App from "./App";
 import Inventory from "./pages/inventory";
 import ShoppingList from "./pages/shoppingList";
+import AddProduct from "./pages/addProduct";
 
 const client = new ApolloClient({
   uri: 'http://localhost:3001/graphql?',
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         path: "/shoppingList",
         element: <ShoppingList />
       },
+      {
+        path: "/addProduct",
+        element: <AddProduct />
+      }
     ],
   },
 ]);
