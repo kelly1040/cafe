@@ -73,7 +73,7 @@ const TableCell = ({ getValue, row, column, table }) => {
         ))}
       </select>
     ) : (
-      <div>
+      <div className="incrementButton">
         <button onClick={onDecrement}>-</button>
         <input
           value={value}
