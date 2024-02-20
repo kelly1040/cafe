@@ -117,7 +117,7 @@ const EditCell = ({ row, table, updateProductQuantity }) => {
     </>
   ) : (
     <button onClick={() => meta?.setEditedRows((old) => ({ ...old, [row.id]: true }))} name="edit">
-      Update
+      Replenish
     </button>
   );
 };
@@ -133,7 +133,11 @@ function Table({ data }) {
       header: "Quantity Needed",
       cell: (props) => <TableCell {...props} updateProductQuantity={updateProductQuantity} />,
     }),
+    columnHelper.accessor("unit", {
+        header: "Unit",
+      }),
     columnHelper.display({
+        header: "Replenish",
       id: "edit",
       cell: (props) => <EditCell {...props} updateProductQuantity={updateProductQuantity} />,
     }),
