@@ -143,7 +143,7 @@ function Table({ data }) {
       return {
         ...row,
         quantity: row.quantity, // Set the default value
-        required: row.minQuantity - row.quantity, // Calculate the default value
+        required: Math.ceil(row.minQuantity - row.quantity), // Calculate the default value
       };
     });
   };
