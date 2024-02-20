@@ -14,6 +14,7 @@ const GET_LIST = gql`
       _id
       name
       quantity
+      minQuantity
     }
   }
 `;
@@ -62,6 +63,7 @@ const TableCell = ({ getValue, row, column, table }) => {
       tableMeta?.updateData(row.index, column.id, value - 1);
     }
   }
+
   if (tableMeta?.editedRows[row.id]) {
     return columnMeta?.type === "select" ? (
       <select onChange={onSelectChange} value={initialValue}>
@@ -75,7 +77,7 @@ const TableCell = ({ getValue, row, column, table }) => {
       <div>
         <button onClick={onDecrement}>-</button>
         <input
-          value={value}
+          value={value} 
           onChange={(e) => setValue(e.target.value)}
           onBlur={onBlur}
           type={columnMeta?.type || "text"}
@@ -97,11 +99,11 @@ const EditCell = ({ row, table, updateProductQuantity }) => {
     }));
 
     // Execute GraphQL mutation here
-    const { _id, quantity } = row.original;
+    const { _id, quantity, required } = row.original;
     updateProductQuantity({
       variables: {
         id: _id,
-        quantity: parseFloat(quantity),
+        quantity: parseFloat(quantity+required),
       },
     });
   };
@@ -126,8 +128,8 @@ function Table({ data }) {
     columnHelper.accessor("name", {
       header: "Product Name",
     }),
-    columnHelper.accessor("quantity", {
-      header: "Quantity",
+    columnHelper.accessor("required", {
+      header: "Quantity Needed",
       cell: (props) => <TableCell {...props} updateProductQuantity={updateProductQuantity} />,
     }),
     columnHelper.display({
@@ -136,14 +138,24 @@ function Table({ data }) {
     }),
   ];
 
-  const [tableData, setTableData] = useState(() => [...data]);
+  const calculateDefaultQuantities = (data) => {
+    return data.map((row) => {
+      return {
+        ...row,
+        quantity: row.quantity, // Set the default value
+        required: row.minQuantity - row.quantity, // Calculate the default value
+      };
+    });
+  };
+
+  const [tableData, setTableData] = useState(() => calculateDefaultQuantities([...data]));
   const [editedRows, setEditedRows] = useState({});
   const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY, {
     refetchQueries: [{ query: GET_LIST }, { query: GET_PRODUCTS }],
   });
 
   useEffect(() => {
-    setTableData(data);
+    setTableData(calculateDefaultQuantities(data));
   }, [data]);
 
   const table = useReactTable({

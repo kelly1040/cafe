@@ -5,7 +5,7 @@ module.exports = buildSchema(`
             _id: ID!
             name: String!
             description: String!
-            minQuantity: Int!
+            minQuantity: Float!
             quantity: Float!
         }
 
@@ -18,7 +18,7 @@ module.exports = buildSchema(`
         input ProductInput {
             name: String!
             description: String!
-            minQuantity: Int!
+            minQuantity: Float!
             quantity: Float!
         }
 
