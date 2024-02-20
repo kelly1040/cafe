@@ -7,6 +7,8 @@ module.exports = buildSchema(`
             description: String!
             minQuantity: Float!
             quantity: Float!
+            unit: String!
+            category: String
         }
 
         type User {
@@ -20,6 +22,8 @@ module.exports = buildSchema(`
             description: String!
             minQuantity: Float!
             quantity: Float!
+            unit: String!
+            category: String
         }
 
         input ProductQuantityUpdate {

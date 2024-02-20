@@ -14,6 +14,7 @@ const GET_PRODUCTS = gql`
       _id
       name
       quantity
+      unit
     }
   }
 `;
@@ -130,7 +131,11 @@ function Table({ data }) {
       header: "Quantity",
       cell: (props) => <TableCell {...props} updateProductQuantity={updateProductQuantity} />,
     }),
+    columnHelper.accessor("unit", {
+      header: "Unit",
+    }),
     columnHelper.display({
+      header: "Update",
       id: "edit",
       cell: (props) => <EditCell {...props} updateProductQuantity={updateProductQuantity} />,
     }),

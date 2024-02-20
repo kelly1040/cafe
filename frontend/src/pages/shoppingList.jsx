@@ -15,6 +15,7 @@ const GET_LIST = gql`
       name
       quantity
       minQuantity
+      unit
     }
   }
 `;

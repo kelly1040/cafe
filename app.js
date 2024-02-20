@@ -55,7 +55,9 @@ app.use('/graphql', graphqlHttp({
                 name: args.productInput.name,
                 description: args.productInput.description,
                 minQuantity: args.productInput.minQuantity,
-                quantity: +args.productInput.quantity
+                quantity: +args.productInput.quantity,
+                unit: args.productInput.unit,
+                category: args.productInput.category
             });
             return  product.save().then(result => {
                 console.log(result);
