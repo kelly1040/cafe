@@ -11,6 +11,8 @@ html {
   font-weight: 600;
   font-style: normal;
 }
+
+
 .incrementButton{
   display: flex;
   justify-content: center;
@@ -43,18 +45,6 @@ body{
   align-items: center;
   flex-direction: column;
 }
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 10px;
-}
 
 button {
   padding: 10px;
@@ -65,3 +55,4 @@ button {
   border: 1px solid #6e8898;
   cursor: pointer;
 }
+

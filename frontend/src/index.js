@@ -1,5 +1,5 @@
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
-import './index.css';
+import '../src/css/index.css';
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {
