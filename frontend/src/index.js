@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import {setContext} from '@apollo/client/link/context';
 import '../src/css/index.css';
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -7,6 +8,8 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+import { AuthProvider } from './context/authContext'; 
+ 
 import App from "./App";
 import Inventory from "./pages/inventory";
 import ShoppingList from "./pages/shoppingList";
@@ -15,6 +18,15 @@ import AddProduct from "./pages/addProduct";
 const client = new ApolloClient({
   uri: 'http://localhost:3001/graphql?',
   cache: new InMemoryCache(),
+});
+
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      authorization: localStorage.getItem('token') || "",
+    },
+  };
 });
 
 
@@ -40,8 +52,9 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-
+  <AuthProvider>
   <ApolloProvider client={client}>
       <RouterProvider router={router}/>
   </ApolloProvider>
+  </AuthProvider>
 );

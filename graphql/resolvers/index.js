@@ -16,17 +16,53 @@ module.exports = CreateResolvers = {
             throw err;
         })
     },
-    userLogin: () => {
-        return User.findById(args.id).then(
-            users => {
-                return users.map(user => {
-                    return {...user._doc, _id: user.id};
-                });
-            }
-        ).catch(err => {
-            console.log(err);
-            throw err;
-        })
+    async userLogin(_, {userInput: {username, password}}) {
+        const user = await User.findOne({username: username});
+        if (!user) {
+            throw new Error('User does not exist');
+        }
+        const doMatch = await bcrypt.compare(password, user.password);
+        if (!doMatch) {
+            throw new Error('Password is incorrect');
+        }
+        const token = jwt.sign({userId: user._id, username: user.username}, 'somesupersecretkey', {
+            expiresIn: '10h'
+        });
+        user.token = token;
+        return {...user._doc, _id: user.id}
+    },
+    userLogin: (args) => {
+        let foundUser;
+    
+        return User.findOne({ username: args.userInput.username })
+            .then((user) => {
+                if (!user) {
+                    throw new Error('User does not exist');
+                }
+    
+                foundUser = user;
+    
+                return bcrypt.compare(args.userInput.password, user.password);
+            })
+            .then((doMatch) => {
+                if (!doMatch) {
+                    throw new Error('Password is incorrect');
+                }
+    
+                const token = jwt.sign(
+                    { userId: foundUser._id, username: foundUser.username },
+                    'somesupersecretkey',
+                    { expiresIn: '10h' }
+                );
+    
+                foundUser.token = token;
+    
+                return { ...foundUser._doc, _id: foundUser.id };
+            })
+            .catch((err) => {
+                console.error(err);
+                throw err;
+            });
     },
     getShoppingList: () => {
             return Product.find().then(

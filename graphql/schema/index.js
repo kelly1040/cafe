@@ -56,7 +56,7 @@ module.exports = buildSchema(`
             createProduct(productInput: ProductInput): Product
             createUser(userInput: UserInput): User
             updateProductQuantity(id: ID!, quantityUpdate: ProductQuantityUpdate): Product
-            userLogin(loginInput: LoginInput): User
+            userLogin(userInput: UserInput): User
         }
 
         schema {
