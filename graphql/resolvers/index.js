@@ -42,36 +42,26 @@ module.exports = CreateResolvers = {
         },
 
     createProduct: (args) => {
-        const product = new Product({
-            name: args.productInput.name,
-            description: args.productInput.description,
-            minQuantity: args.productInput.minQuantity,
-            quantity: +args.productInput.quantity,
-            unit: args.productInput.unit,
-            category: args.productInput.category
-        });
-        return  product.save().then(result => {
-            console.log(result);
-            return {...result._doc, _id: product.id};
-        }).catch(err => {
-            console.log(err);
-            throw err;
-        });
-    },
-    updateProductQuantity: (args) => {
-        return Product.findById(args.id).then(product => {
-            if (!product) {
-                throw new Error('Product not found');
+        return Product.findOne({ name: args.productInput.name }).then(product => {
+            if (product) {
+                throw new Error('Product exists already');
             }
-            product.quantity = args.quantityUpdate.quantity;
-            return product.save();
-        }).then(result => { 
-            return {...result._doc, _id: result.id};
-        }
-        ).catch(err => {
-            console.log(err);
-            throw err;
-        });
+            const newProduct = new Product({
+                name: args.productInput.name,
+                description: args.productInput.description,
+                minQuantity: args.productInput.minQuantity,
+                quantity: +args.productInput.quantity,
+                unit: args.productInput.unit,
+                category: args.productInput.category
+            });
+        
+            return newProduct.save().then(result => {
+                return { ...result._doc, _id: newProduct.id };
+            }).catch(err => {
+                console.log(err);
+                throw err;
+            });
+            });
     },
     createUser: (args) => {
         return User.findOne({username: args.userInput.username}).then(user => {
@@ -87,5 +77,20 @@ module.exports = CreateResolvers = {
             });
             return user.save();
         })
+    },
+    updateProductQuantity: (args) => {
+        return Product.findById(args.id).then(product => {
+            if (!product) {
+                throw new Error('Product not found');
+            }
+            product.quantity = args.quantityUpdate.quantity;
+            return product.save();
+        }).then(result => { 
+            return {...result._doc, _id: result.id};
+        }
+        ).catch(err => {
+            console.log(err);
+            throw err;
+        });
     },
 }
