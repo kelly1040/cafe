@@ -1,10 +1,9 @@
 const bcrypt = require('bcryptjs');
-
+const jwt = require('jsonwebtoken');
 const Product = require('../../models/product');
 const User = require('../../models/user');
 
-module.exports = {
-rootValue: {
+module.exports = CreateResolvers = {
     products: () => {
         return Product.find().then(
             products => {
@@ -17,11 +16,11 @@ rootValue: {
             throw err;
         })
     },
-    users: () => {
-        return User.find().then(
+    userLogin: () => {
+        return User.findById(args.id).then(
             users => {
                 return users.map(user => {
-                    return {...user._doc, _id: user.id, password: null};
+                    return {...user._doc, _id: user.id};
                 });
             }
         ).catch(err => {
@@ -29,12 +28,27 @@ rootValue: {
             throw err;
         })
     },
+    getShoppingList: () => {
+            return Product.find().then(
+                products => {
+                    return products
+                    .filter(product => product.quantity < product.minQuantity)
+                    .map(product => ({ ...product._doc, _id: product.id }));
+                }
+            ).catch(err => {
+                console.log(err);
+                throw err;
+            })
+        },
+
     createProduct: (args) => {
         const product = new Product({
             name: args.productInput.name,
             description: args.productInput.description,
             minQuantity: args.productInput.minQuantity,
-            quantity: +args.productInput.quantity
+            quantity: +args.productInput.quantity,
+            unit: args.productInput.unit,
+            category: args.productInput.category
         });
         return  product.save().then(result => {
             console.log(result);
@@ -44,8 +58,23 @@ rootValue: {
             throw err;
         });
     },
+    updateProductQuantity: (args) => {
+        return Product.findById(args.id).then(product => {
+            if (!product) {
+                throw new Error('Product not found');
+            }
+            product.quantity = args.quantityUpdate.quantity;
+            return product.save();
+        }).then(result => { 
+            return {...result._doc, _id: result.id};
+        }
+        ).catch(err => {
+            console.log(err);
+            throw err;
+        });
+    },
     createUser: (args) => {
-        return User.findOne({userName: args.userInput.userName}).then(user => {
+        return User.findOne({username: args.userInput.username}).then(user => {
             if (user) {
                 throw new Error('User exists already');
             }
@@ -53,16 +82,10 @@ rootValue: {
         })
         .then(hashedPassword => {
             const user = new User({
-                userName: args.userInput.userName,
-                password: hashedPassword
+                username: args.userInput.username,
+                password: hashedPassword,
             });
             return user.save();
         })
-        .then(result => {
-            return {...result._doc, password: null, _id: result.id};
-        })
-        .catch(err => {
-            throw err;
-        });
     },
-}};
+}
