@@ -14,6 +14,7 @@ import App from "./App";
 import Inventory from "./pages/inventory";
 import ShoppingList from "./pages/shoppingList";
 import AddProduct from "./pages/addProduct";
+import Login from "./pages/login";
 
 const client = new ApolloClient({
   uri: 'http://localhost:3001/graphql?',
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
         path: "/addProduct",
         element: <AddProduct />
       },
+      {
+        path: "/login",
+        element: <Login />
+      }
     ],
   },
 ]);

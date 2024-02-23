@@ -21,13 +21,7 @@ app.use('/graphql', graphqlHttp({
     // resolver functions
     rootValue: getResolvers,
     graphiql: true
-}));
-
-app.use('/login', (req, res) => {
-  res.send({
-    token: 'test123'
-  });
-});
+})); 
 
 mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}
 @atlascluster.re2m0ox.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`)
