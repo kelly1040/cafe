@@ -1,11 +1,13 @@
-import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { ReactComponent as Waffle } from '../../src/assests/waffle_icon.svg';
-import { useState } from "react";
+import { useState, useContext } from "react";
 import '../../src/css/nav.css';
+import { AuthContext } from '../../src/context/authContext.jsx';
 
 export default function NavBar() {
     const [showNav, setShowNav] = useState(false);
+    const { user, logout} = useContext(AuthContext);
+    console.log(user);
     const handleShowNavbar = () => {
         setShowNav(!showNav)
       };
@@ -16,17 +18,18 @@ export default function NavBar() {
           <main>
             <nav>
                 <div className="container">
-                <div className="homepage">
-                    <NavLink to="/">Home</NavLink>
-                </div>
-                <div className="menu-icon" onClick={handleShowNavbar}>
-                    menu<Waffle />
-                </div>
-                <div className={`nav-elements  ${showNav && 'active'}`}>
+                  <div className="homepage">
+                      <NavLink to="/">Home</NavLink>
+                  </div>
+                  <div className="menu-icon" onClick={handleShowNavbar}>
+                      menu<Waffle />
+                  </div>
+                  <div className={`nav-elements  ${showNav && 'active'}`}>
                     <NavLink to="/inventory">Inventory</NavLink>
                     <NavLink to="/shoppingList">Shopping List</NavLink>
-                    <NavLink to="/addProduct">Add Product</NavLink>
-                </div>
+                    {user.username === "manager" && <NavLink to="/addProduct">Add Product</NavLink>}
+                    {user ? <button onClick={logout}>Logout</button>: ""}
+                  </div>
                 </div>
             </nav>
             <Outlet/>

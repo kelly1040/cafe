@@ -13,8 +13,9 @@ module.exports = buildSchema(`
 
         type User {
             _id: ID!
-            userName: String!
-            password: String
+            username: String!
+            password: String!
+            token: String
         }
         
         input ProductInput {
@@ -31,7 +32,7 @@ module.exports = buildSchema(`
         }
 
         input UserInput {
-            userName: String!
+            username: String!
             password: String!
         }
     
@@ -39,16 +40,23 @@ module.exports = buildSchema(`
             getQuantity: Float!
         }
 
+        input LoginInput {
+            username: String!
+            password: String!
+        }
+
 
         type RootQuery {
             products: [Product!]!
             getShoppingList: [Product]!
+            users: [User]!
         }
 
         type RootMutation {
             createProduct(productInput: ProductInput): Product
             createUser(userInput: UserInput): User
             updateProductQuantity(id: ID!, quantityUpdate: ProductQuantityUpdate): Product
+            userLogin(userInput: UserInput): User
         }
 
         schema {
