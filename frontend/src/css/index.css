@@ -1,7 +1,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
 
-html {
+ html {
   width: 100%;
   background-color: #FDF0E5;
   display: flex;
@@ -11,48 +11,88 @@ html {
   font-weight: 600;
   font-style: normal;
 }
-
-
-.incrementButton{
+input [name="description"] {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  border: 1px solid #6e8898;
+  width: 200px;
+  text-align: center;
+}
+.login {
+  margin-top: 10%;
+}
+div{
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
+  flex-direction: column;
 }
-input {
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+form > input {
   padding: 10px;
   margin: 10px;
   border-radius: 5px;
   border: 1px solid #6e8898;
   width: 40%;
   text-align: center;
-}
-div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-h1{
-  display: flex;
-  justify-content: center;
-}
+} */
 
-body{
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
+body {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
 
-button {
-  padding: 10px;
-  margin: 10px;
-  border-radius: 5px;
-  background-color: #6e8898;
-  color: #FFD570;
-  border: 1px solid #6e8898;
-  cursor: pointer;
-}
+  .incrementButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+  }
+  input {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: 1px solid #6e8898;
+    width: 40%;
+    text-align: center;
+  }
+ div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  } 
+   
+  h1{
+    display: flex;
+    justify-content: center;
+  }
+
+  body{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  button {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: #6e8898;
+    color: #FFD570;
+    border: 1px solid #6e8898;
+    cursor: pointer;
+  }
 

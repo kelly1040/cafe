@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import "../../src/css/table.css";
+
 import {
   createColumnHelper,
   flexRender,

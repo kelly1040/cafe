@@ -12,10 +12,14 @@ function App() {
     return <Login />
   }
   if(!user) {
-     console.log("hello");
      return <Login />}
   return (
-    <NavBar/>
+    <div>
+      <NavBar/>
+      <div>
+
+      </div>
+    </div>
   ); 
 }
 

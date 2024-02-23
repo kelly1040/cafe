@@ -1,14 +1,23 @@
-.login-wrapper {
+.login{
   display: flex;
-  justify-content: flex-start;
-  height: 100vh;
+  justify-content: center;
   width: 100%;
   margin-top: 10%;
+  height: 100vh;
   align-items: center;
 }
 
-.login-wrapper form, label, input {
+.login form, label, input {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+@media (max-width: 600px) {
+  .login {
+    font-size: large;
+  }
+  .label {
+    font-size: 100px;
+  }
 }
