@@ -16,21 +16,6 @@ module.exports = CreateResolvers = {
             throw err;
         })
     },
-    async userLogin(_, {userInput: {username, password}}) {
-        const user = await User.findOne({username: username});
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-        const doMatch = await bcrypt.compare(password, user.password);
-        if (!doMatch) {
-            throw new Error('Password is incorrect');
-        }
-        const token = jwt.sign({userId: user._id, username: user.username}, 'somesupersecretkey', {
-            expiresIn: '10h'
-        });
-        user.token = token;
-        return {...user._doc, _id: user.id}
-    },
     userLogin: (args) => {
         let foundUser;
     
