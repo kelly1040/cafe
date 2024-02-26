@@ -30,15 +30,15 @@ export default function Login() {
       context.login(userData);
       navigate('/inventory');
     },
-    onError({ graphQLErrors }) {
-      setErrors(graphQLErrors);
-    },
+    // onError({ graphQLErrors }) {
+    //   setErrors(graphQLErrors);
+    // },
     variables: {
       username: values.username,
       password: values.password,
     },
   });
-
+  //if (error) return `Submission error! ${error.message}`;
   function loginUserCallback() {
     loginUser();
   }
@@ -55,9 +55,6 @@ export default function Login() {
             value={values.username}
             onChange={onChange}
           />
-          {/* {errors.map(function(error, index){
-            return <p key={index}>{error.message}</p>
-          })} */}
         </div>  
         <div className="form-group">
           <label htmlFor="password">Password</label>
@@ -67,9 +64,13 @@ export default function Login() {
             value={values.password}
             onChange={onChange}
           />
-          {/* {errors.map(function(error, index){
-            return <p key={index}>{error.message}</p>
-          })} */}
+          {errors && errors.graphQLErrors && (
+            <div className="error-messages">
+              {errors.graphQLErrors.map((error, index) => (
+                <p key={index}>{error.message}</p>
+              ))}
+            </div>
+          )}
         </div>
         <button onClick={onSubmit}>Login</button>
       </form>

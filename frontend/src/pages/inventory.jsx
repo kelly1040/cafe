@@ -211,13 +211,21 @@ export default function ShoppingList() {
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
     refetchQueries: [{ query: GET_PRODUCTS}, {query: GET_LIST }],
   });
+  const [searchInput, setSearchInput] = useState('');
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-
+  const filterProducts = (products) => {
+    return products.filter((product) =>
+      product.name.toLowerCase().includes(searchInput.toLowerCase())
+    );
+  };
+  const filteredProducts = filterProducts(data.products);
   return (
     <div>
       <h1>Inventory List</h1>
-      <Table data={data.products} />
+      <input type="text" placeholder="Search for a product" 
+      value={searchInput} onChange={(e) => setSearchInput(e.target.value)}/>
+      <Table data={filteredProducts} />
     </div>
   );
 }

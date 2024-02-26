@@ -61,7 +61,6 @@ module.exports = CreateResolvers = {
                 throw err;
             })
         },
-
     createProduct: (args) => {
         return Product.findOne({ name: args.productInput.name }).then(product => {
             if (product) {
