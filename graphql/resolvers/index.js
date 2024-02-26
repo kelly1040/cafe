@@ -16,39 +16,6 @@ module.exports = CreateResolvers = {
             throw err;
         })
     },
-    userLogin: (args) => {
-        let foundUser;
-    
-        return User.findOne({ username: args.userInput.username })
-            .then((user) => {
-                if (!user) {
-                    throw new Error('User does not exist');
-                }
-    
-                foundUser = user;
-    
-                return bcrypt.compare(args.userInput.password, user.password);
-            })
-            .then((doMatch) => {
-                if (!doMatch) {
-                    throw new Error('Password is incorrect');
-                }
-    
-                const token = jwt.sign(
-                    { userId: foundUser._id, username: foundUser.username },
-                    'somesupersecretkey',
-                    { expiresIn: '10h' }
-                );
-    
-                foundUser.token = token;
-    
-                return { ...foundUser._doc, _id: foundUser.id };
-            })
-            .catch((err) => {
-                console.error(err);
-                throw err;
-            });
-    },
     getShoppingList: () => {
             return Product.find().then(
                 products => {
@@ -83,6 +50,21 @@ module.exports = CreateResolvers = {
             });
             });
     },
+    updateProductQuantity: (args) => {
+        return Product.findById(args.id).then(product => {
+            if (!product) {
+                throw new Error('Product not found');
+            }
+            product.quantity = args.quantityUpdate.quantity;
+            return product.save();
+        }).then(result => { 
+            return {...result._doc, _id: result.id};
+        }
+        ).catch(err => {
+            console.log(err);
+            throw err;
+        });
+    },
     createUser: (args) => {
         return User.findOne({username: args.userInput.username}).then(user => {
             if (user) {
@@ -98,19 +80,37 @@ module.exports = CreateResolvers = {
             return user.save();
         })
     },
-    updateProductQuantity: (args) => {
-        return Product.findById(args.id).then(product => {
-            if (!product) {
-                throw new Error('Product not found');
-            }
-            product.quantity = args.quantityUpdate.quantity;
-            return product.save();
-        }).then(result => { 
-            return {...result._doc, _id: result.id};
-        }
-        ).catch(err => {
-            console.log(err);
-            throw err;
-        });
+    userLogin: (args) => {
+        let foundUser;
+    
+        return User.findOne({ username: args.userInput.username })
+            .then((user) => {
+                if (!user) {
+                    throw new Error('User does not exist');
+                }
+    
+                foundUser = user;
+    
+                return bcrypt.compare(args.userInput.password, user.password);
+            })
+            .then((doMatch) => {
+                if (!doMatch) {
+                    throw new Error('Password is incorrect');
+                }
+    
+                const token = jwt.sign(
+                    { userId: foundUser._id, username: foundUser.username },
+                    'somesupersecretkey',
+                    { expiresIn: '10h' }
+                );
+    
+                foundUser.token = token;
+    
+                return { ...foundUser._doc, _id: foundUser.id };
+            })
+            .catch((err) => {
+                console.error(err);
+                throw err;
+            });
     },
 }

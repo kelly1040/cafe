@@ -28,7 +28,7 @@ export default function NavBar() {
                     <NavLink to="/inventory">Inventory</NavLink>
                     <NavLink to="/shoppingList">Shopping List</NavLink>
                     {user.username === "manager" && <NavLink to="/addProduct">Add Product</NavLink>}
-                    {user ? <button onClick={logout}>Logout</button>: ""}
+                    <button onClick={logout}>Logout</button>
                   </div>
                 </div>
             </nav>

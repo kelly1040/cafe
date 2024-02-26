@@ -35,16 +35,11 @@ module.exports = buildSchema(`
             username: String!
             password: String!
         }
-    
-        input RequiredQuantity {
-            getQuantity: Float!
-        }
 
         input LoginInput {
             username: String!
             password: String!
         }
-
 
         type RootQuery {
             products: [Product!]!

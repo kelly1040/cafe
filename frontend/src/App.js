@@ -1,4 +1,4 @@
-import {React, useState} from 'react';
+import {React} from 'react';
 import { useContext } from 'react';
 import NavBar from './components/nav.jsx';
 import Login from './pages/login.jsx';
@@ -6,19 +6,12 @@ import { AuthContext } from './context/authContext.jsx';
 
 
 function App() {
-  const { user, logout} = useContext(AuthContext);
-  const onLogout = () => {
-    logout();
-    return <Login />
-  }
+  const { user} = useContext(AuthContext);
   if(!user) {
      return <Login />}
   return (
     <div>
       <NavBar/>
-      <div>
-
-      </div>
     </div>
   ); 
 }
