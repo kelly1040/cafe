@@ -12,9 +12,33 @@ const CREATE_PRODUCT = gql`
     }
   }
 `;
+//graphql queries
+const GET_PRODUCTS = gql`
+  query getProducts {
+    products {
+      _id
+      name
+      description
+      quantity
+      minQuantity
+      unit
+    }
+  }
+`;
+
+//graphql queries
+const GET_LIST = gql`
+  query getShoppingList {
+    getShoppingList {
+      _id
+      name
+      quantity
+    }
+  }
+`;
 
 export default function AddProduct() {
-  const {onChange, onSubmit, values} = useForm(addProductCallback, {
+  const {onChange, onSubmit, values, resetForm} = useForm(addProductCallback, {
     name: '',
     description: '',
     quantity: '',
@@ -32,11 +56,12 @@ export default function AddProduct() {
         unit: values.unit,
       },
     },
-  });
+      refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }],
+    });
 
   function addProductCallback() {
     addProduct();
-    console.log(values);
+    resetForm();
   }
 
  return(

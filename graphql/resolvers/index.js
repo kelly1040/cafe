@@ -94,6 +94,17 @@ module.exports = CreateResolvers = {
                 throw err;
             });            
     },
+    deleteProduct: (args) => {
+        const productId = args.id;
+        if (!productId) {
+          throw new Error("Invalid or missing product ID");
+        }
+        return Product.findByIdAndDelete({ _id: productId })
+          .then(() => true)
+          .catch((err) => {
+            throw err;
+          });
+      },
     createUser: (args) => {
         return User.findOne({username: args.userInput.username}).then(user => {
             if (user) {

@@ -12,9 +12,13 @@ export const useForm = (callback, initialState = {}) => {
       callback();
     };
   
+    const resetForm = () =>{
+      setValues(initialState);
+    }
     return {
       onChange,
       onSubmit,
       values,
+      resetForm
     };
   }

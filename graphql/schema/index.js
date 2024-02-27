@@ -62,6 +62,7 @@ module.exports = buildSchema(`
             updateProductQuantity(id: ID!, quantityUpdate: ProductQuantityUpdate): Product
             updateProduct(id: ID!, productUpdateInput: ProductUpdateInput): Product
             userLogin(userInput: UserInput): User
+            deleteProduct(id:ID!): Boolean
         }
 
         schema {

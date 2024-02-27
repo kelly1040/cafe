@@ -45,6 +45,12 @@ const UPDATE_PRODUCT = gql`
   }
 `;
 
+const DELETE_PRODUCT = gql`
+  mutation deleteProduct($id: ID!){
+    deleteProduct(id: $id)
+  }
+`
+
 const TableCell = ({ getValue, row, column, table }) => {
   const initialValue = getValue()
   const columnMeta = column.columnDef.meta
@@ -113,7 +119,25 @@ const EditCell = ({ row, table, updateProduct }) => {
       </>
     ) : (
       <button onClick={() => meta?.setEditedRows((old) => ({ ...old, [row.id]: true }))} name="edit">
-        Update
+        Edit
+      </button>
+    );
+  };
+
+  const DeleteCell = ({ row, deleteProduct }) => {
+    const { _id } = row.original;
+  
+    const handleDelete = () => {
+      deleteProduct({
+        variables: {
+          id: _id,
+        },
+      });
+    };
+  
+    return (
+      <button onClick={handleDelete} name="delete">
+        Delete
       </button>
     );
   };
@@ -145,20 +169,23 @@ function Table({ data }) {
         cell: (props) => <TableCell {...props} updateProduct={updateProduct} />,
       }),
     columnHelper.display({
-      header: "Update",
+      header: "Edit",
       id: "edit",
       cell: (props) => <EditCell {...props} updateProduct={updateProduct} />,
     }),
-    // columnHelper.display({
-    //     header: "Delete",
-    //     id: "Delete",
-
-    // })
+    columnHelper.display({
+       header: "Delete",
+       id: "Delete",
+       cell: (props) => <DeleteCell {...props} deleteProduct={deleteProduct} />,
+    })
   ];
 
   const [tableData, setTableData] = useState(() => [...data]);
   const [editedRows, setEditedRows] = useState({});
   const [updateProduct] = useMutation(UPDATE_PRODUCT, {
+    refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }],
+  });
+  const [deleteProduct] = useMutation(DELETE_PRODUCT, {
     refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }],
   });
 
