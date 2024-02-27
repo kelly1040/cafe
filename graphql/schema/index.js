@@ -27,6 +27,15 @@ module.exports = buildSchema(`
             category: String
         }
 
+        input ProductUpdateInput {
+            name: String
+            description: String
+            minQuantity: Float
+            quantity: Float
+            unit: String
+            category: String
+        }
+
         input ProductQuantityUpdate {
             quantity: Float!
         }
@@ -51,6 +60,7 @@ module.exports = buildSchema(`
             createProduct(productInput: ProductInput): Product
             createUser(userInput: UserInput): User
             updateProductQuantity(id: ID!, quantityUpdate: ProductQuantityUpdate): Product
+            updateProduct(id: ID!, productUpdateInput: ProductUpdateInput): Product
             userLogin(userInput: UserInput): User
         }
 

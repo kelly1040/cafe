@@ -65,6 +65,35 @@ module.exports = CreateResolvers = {
             throw err;
         });
     },
+    updateProduct:(args) => {
+        return Product.findById(args.id).then(product => {
+            if (!product) {
+                throw new Error('Product not found');
+            }
+            if (args.productUpdateInput.name != undefined){
+                product.name = args.productUpdateInput.name
+            }
+            if (args.productUpdateInput.description != undefined){
+                product.description = args.productUpdateInput.description
+            }
+            if (args.productUpdateInput.quantity != undefined){
+                product.quantity = args.productUpdateInput.quantity
+            }
+            if (args.productUpdateInput.minQuantity != undefined){
+                product.minQuantity = args.productUpdateInput.minQuantity
+            }
+            if (args.productUpdateInput.unit != undefined){
+                product.unit = args.productUpdateInput.unit
+            }
+            return product.save();
+            }).then(result => { 
+                return {...result._doc, _id: result.id};
+            }
+            ).catch(err => {
+                console.log(err);
+                throw err;
+            });            
+    },
     createUser: (args) => {
         return User.findOne({username: args.userInput.username}).then(user => {
             if (user) {
@@ -88,24 +117,19 @@ module.exports = CreateResolvers = {
                 if (!user) {
                     throw new Error('User does not exist');
                 }
-    
                 foundUser = user;
-    
                 return bcrypt.compare(args.userInput.password, user.password);
             })
             .then((doMatch) => {
                 if (!doMatch) {
                     throw new Error('Password is incorrect');
                 }
-    
                 const token = jwt.sign(
                     { userId: foundUser._id, username: foundUser.username },
                     'somesupersecretkey',
                     { expiresIn: '10h' }
                 );
-    
                 foundUser.token = token;
-    
                 return { ...foundUser._doc, _id: foundUser.id };
             })
             .catch((err) => {

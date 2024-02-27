@@ -27,7 +27,12 @@ export default function NavBar() {
                   <div className={`nav-elements  ${showNav && 'active'}`}>
                     <NavLink to="/inventory">Inventory</NavLink>
                     <NavLink to="/shoppingList">Shopping List</NavLink>
-                    {user.username === "manager" && <NavLink to="/addProduct">Add Product</NavLink>}
+                    {user.username === "manager" && 
+                    <>
+                    <NavLink to="/addProduct">Add Product</NavLink>
+                    <NavLink to="/products">All Products</NavLink>
+                    </>
+                    }
                     <button onClick={logout}>Logout</button>
                   </div>
                 </div>
