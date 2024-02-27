@@ -18,6 +18,21 @@ module.exports = buildSchema(`
             token: String
         }
         
+        type AuthPayload {
+            user: User
+            errors: [Error]
+        }
+
+        type Error {
+            message: String!
+            code: String
+          }
+        
+          input UserInput {
+            username: String!
+            password: String!
+          }
+
         input ProductInput {
             name: String!
             description: String!
@@ -40,16 +55,6 @@ module.exports = buildSchema(`
             quantity: Float!
         }
 
-        input UserInput {
-            username: String!
-            password: String!
-        }
-
-        input LoginInput {
-            username: String!
-            password: String!
-        }
-
         type RootQuery {
             products: [Product!]!
             getShoppingList: [Product]!
@@ -61,7 +66,7 @@ module.exports = buildSchema(`
             createUser(userInput: UserInput): User
             updateProductQuantity(id: ID!, quantityUpdate: ProductQuantityUpdate): Product
             updateProduct(id: ID!, productUpdateInput: ProductUpdateInput): Product
-            userLogin(userInput: UserInput): User
+            loginUser(userInput: UserInput): AuthPayload
             deleteProduct(id:ID!): Boolean
         }
 

@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Product = require('../../models/product');
 const User = require('../../models/user');
+const { GraphQLError } = require('graphql');
 
 module.exports = CreateResolvers = {
     products: () => {
@@ -120,32 +121,49 @@ module.exports = CreateResolvers = {
             return user.save();
         })
     },
-    userLogin: (args) => {
-        let foundUser;
-    
-        return User.findOne({ username: args.userInput.username })
-            .then((user) => {
-                if (!user) {
-                    throw new Error('User does not exist');
-                }
-                foundUser = user;
-                return bcrypt.compare(args.userInput.password, user.password);
-            })
-            .then((doMatch) => {
-                if (!doMatch) {
-                    throw new Error('Password is incorrect');
-                }
-                const token = jwt.sign(
-                    { userId: foundUser._id, username: foundUser.username },
-                    'somesupersecretkey',
-                    { expiresIn: '10h' }
-                );
-                foundUser.token = token;
-                return { ...foundUser._doc, _id: foundUser.id };
-            })
-            .catch((err) => {
-                console.error(err);
-                throw err;
+    loginUser: async (args) => {
+        try {
+          const user = await User.findOne({ username: args.userInput.username });
+          if (!user) {
+            throw new GraphQLError('User does not exist', {
+                extensions: {
+                  code: 'BAD_USER_INPUT',
+                },
+              });
+          }
+          const doMatch = await bcrypt.compare(args.userInput.password, user.password);
+          if (!doMatch) {
+            throw new GraphQLError('Password is incorrect', {
+              extensions: {
+                code: 'BAD_USER_INPUT',
+              },
             });
-    },
+          }
+          const token = jwt.sign(
+            { userId: user._id, username: user.username },
+            'somesupersecretkey',
+            { expiresIn: '10h' }
+          );
+          user.token = token;
+          return {
+            user: {
+              ...user._doc,
+              _id: user.id,
+              password: null,
+            },
+            errors: [],
+          };
+        } catch (err) {
+          console.error(err);
+          return {
+            user: null,
+            errors: [
+              {
+                message: err.message || 'An error occurred during login',
+                code: err.extensions.code || 'INTERNAL_SERVER_ERROR',
+              },
+            ],
+          };
+        }
+      },
 }

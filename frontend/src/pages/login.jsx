@@ -6,11 +6,15 @@ import {AuthContext} from '../context/authContext';
 import {useNavigate} from 'react-router-dom';
 
 const LOGIN_USER = gql`
-  mutation login($username: String!, $password: String!) {
-    userLogin(userInput:{ username: $username, password: $password}){
-      username
-      password
-      token
+  mutation login($userInput: UserInput!) {
+    loginUser(userInput: $userInput){
+      user{
+        username
+        token
+      }
+      errors{
+        message
+      }
     }
   }
 `;
@@ -25,17 +29,28 @@ export default function Login() {
     password: '',
   });
 
+
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-    update(_, { data: { userLogin: userData } }) {
-      context.login(userData);
-      navigate('/inventory');
+    update(_, { data }) {
+      const { loginUser: userData } = data || {};
+      if (userData && userData.user) {
+        // Successful login
+        context.login(userData.user);
+        navigate('/inventory');
+      } else {
+        // Login with errors
+        setErrors(userData);
+      }
     },
-    // onError({ graphQLErrors }) {
-    //   setErrors(graphQLErrors);
-    // },
+      onError(error) {
+        console.error(error);
+        // Handle unexpected errors
+      },
     variables: {
+      userInput: {
       username: values.username,
       password: values.password,
+      }
     },
   });
   //if (error) return `Submission error! ${error.message}`;
@@ -64,15 +79,15 @@ export default function Login() {
             value={values.password}
             onChange={onChange}
           />
-          {errors && errors.graphQLErrors && (
+          {errors.errors && (
             <div className="error-messages">
-              {errors.graphQLErrors.map((error, index) => (
+              {errors.errors.map((error, index) => (
                 <p key={index}>{error.message}</p>
               ))}
             </div>
           )}
         </div>
-        <button onClick={onSubmit}>Login</button>
+        <button type='submit'>Login</button>
       </form>
     </div>
   );
