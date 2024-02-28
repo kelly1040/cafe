@@ -29,11 +29,16 @@ module.exports = CreateResolvers = {
                 throw err;
             })
         },
-    createProduct: (args) => {
-        return Product.findOne({ name: args.productInput.name }).then(product => {
+    createProduct: async (args) => {
+        try{
+            const product =  await Product.findOne({ name: args.productInput.name })
             if (product) {
-                throw new Error('Product exists already');
-            }
+                throw new GraphQLError('Product already exists', {
+                    extensions: {
+                      code: 'BAD_USER_INPUT',
+                    },
+                  });
+                }
             const newProduct = new Product({
                 name: args.productInput.name,
                 description: args.productInput.description,
@@ -43,13 +48,23 @@ module.exports = CreateResolvers = {
                 category: args.productInput.category
             });
         
-            return newProduct.save().then(result => {
-                return { ...result._doc, _id: newProduct.id };
-            }).catch(err => {
+            await newProduct.save()
+            return { 
+                product: {...newProduct._doc, _id: newProduct.id },
+                errors: []
+            };
+        }catch(err){
                 console.log(err);
-                throw err;
-            });
-            });
+                return {
+                    user: null,
+                    errors: [
+                      {
+                        message: err.message || 'An error occurred during login',
+                        code: err.extensions && err.extensions.code ? err.extensions.code : 'INTERNAL_SERVER_ERROR',
+                      },
+                    ],
+                  };
+            };
     },
     updateProductQuantity: (args) => {
         return Product.findById(args.id).then(product => {
@@ -106,20 +121,18 @@ module.exports = CreateResolvers = {
             throw err;
           });
       },
-    createUser: (args) => {
-        return User.findOne({username: args.userInput.username}).then(user => {
-            if (user) {
+    createUser: async (_, args) => {
+        const existingUser = await User.findOne({username: args.userInput.username})
+            if (existingUser) {
                 throw new Error('User exists already');
             }
-            return bcrypt.hash(args.userInput.password, 12)
-        })
-        .then(hashedPassword => {
+            const hashedPassword = await bcrypt.hash(args.userInput.password, 12)
             const user = new User({
                 username: args.userInput.username,
                 password: hashedPassword,
             });
-            return user.save();
-        })
+            await user.save();
+            return user;
     },
     loginUser: async (args) => {
         try {

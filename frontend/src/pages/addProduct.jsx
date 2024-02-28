@@ -1,14 +1,20 @@
 import {useForm} from '../utility/hook';
 import { useMutation, gql } from '@apollo/client';
+import {useState} from 'react';
 
 // GraphQL mutation
 const CREATE_PRODUCT = gql`
   mutation createProduct($productInput: ProductInput!) {
     createProduct(productInput: $productInput) {
-      name
-      quantity
-      minQuantity
-      unit
+      product{
+        name
+        quantity
+        minQuantity
+        unit
+      }
+      errors {
+        message
+      }
     }
   }
 `;
@@ -38,6 +44,7 @@ const GET_LIST = gql`
 `;
 
 export default function AddProduct() {
+  const [errors, setErrors] = useState({});
   const {onChange, onSubmit, values, resetForm} = useForm(addProductCallback, {
     name: '',
     description: '',
@@ -47,6 +54,17 @@ export default function AddProduct() {
   });
   
   const [addProduct, { loading }] = useMutation(CREATE_PRODUCT, {
+    update(_, { data }) {
+      const { createProduct: productData } = data || {};
+      if (productData.product) {
+        // added product succesfully
+        resetForm() // empty input fields
+        setErrors({})  // reset error
+      }else{
+        // has an error 
+        setErrors(productData);
+      }
+    },
     variables: {
       productInput: {
         name: values.name,
@@ -58,16 +76,22 @@ export default function AddProduct() {
     },
       refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }],
     });
-
+    
   function addProductCallback() {
     addProduct();
-    resetForm();
   }
 
  return(
   <div>
     <form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
       <h1>Add Product</h1>
+      {errors.errors && (
+            <div className="error-messages">
+              {errors.errors.map((error, index) => (
+                <p key={index}>{error.message}</p>
+              ))}
+            </div>
+        )}
       <div className="form-group">
         <label htmlFor="name">Name</label>
         <input
