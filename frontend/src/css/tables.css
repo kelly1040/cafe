@@ -12,6 +12,23 @@ thead{
 tbody{
     text-align: center;
 }
+
+.incrementButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+  }
+
+.searchBar{
+    width: fit-content;
+}
+
+.page input{
+    width:60%;
+    text-align: center;
+}
+
 @media (max-width: 600px) {
     table {
         font-weight: 400;
@@ -27,27 +44,12 @@ tbody{
     button{
         margin: 2%;
     }
-    input{
-        margin: 2%;
-        width:80%;
-    }
-    .searchBar{
+    .page .searchBar{
         width: 90%;
     }
-}
-.incrementButton{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-  }
+    .page input{
+        margin: 2%;
+        width:30%;
+    }
 
-.searchBar{
-    width: 30%;
 }
-
-input{
-    width:10%;
-    text-align: center;
-}
-
