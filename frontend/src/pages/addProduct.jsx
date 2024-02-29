@@ -2,7 +2,7 @@ import {useForm} from '../utility/hook';
 import { useMutation} from '@apollo/client';
 import {useState} from 'react';
 import '../../src/css/forms.css';
-import { CREATE_PRODUCT, GET_PRODUCTS, GET_LIST } from '../utility/graphql';
+import { CREATE_PRODUCT, GET_PRODUCTS, GET_LIST } from '../utility/graphqlQueries';
 
 export default function AddProduct() {
   const [errors, setErrors] = useState({});

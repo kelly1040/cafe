@@ -34,7 +34,10 @@ export const GET_LIST = gql`
     getShoppingList {
       _id
       name
+      description
       quantity
+      minQuantity
+      unit
     }
   }
 `;
@@ -75,3 +78,16 @@ export const DELETE_PRODUCT = gql`
     deleteProduct(id: $id)
   }
 `
+export const LOGIN_USER = gql`
+  mutation login($userInput: UserInput!) {
+    loginUser(userInput: $userInput){
+      user{
+        username
+        token
+      }
+      errors{
+        message
+      }
+    }
+  }
+`;

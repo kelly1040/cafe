@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useQuery, useMutation } from '@apollo/client';
-import { GET_PRODUCTS, GET_LIST, UPDATE_PRODUCT, DELETE_PRODUCT } from '../utility/graphql';
+import { GET_PRODUCTS, GET_LIST, UPDATE_PRODUCT, DELETE_PRODUCT } from '../utility/graphqlQueries';
 
 const TableCell = ({ getValue, row, column, table }) => {
   const initialValue = getValue()

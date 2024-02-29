@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import '../../src/css/tables.css';
-import { GET_PRODUCTS, GET_LIST, UPDATE_PRODUCT_QUANTITY } from '../utility/graphql';
+import { GET_PRODUCTS, GET_LIST, UPDATE_PRODUCT_QUANTITY } from '../utility/graphqlQueries';
 import {
   createColumnHelper,
   flexRender,

@@ -1,23 +1,11 @@
 import {useContext, useState} from 'react';
 import '../../src/css/login.css';
-import {gql, useMutation} from '@apollo/client';
+import {useMutation} from '@apollo/client';
 import {useForm} from '../utility/hook';
 import {AuthContext} from '../context/authContext';
 import {useNavigate} from 'react-router-dom';
+import { LOGIN_USER } from '../utility/graphqlQueries';
 
-const LOGIN_USER = gql`
-  mutation login($userInput: UserInput!) {
-    loginUser(userInput: $userInput){
-      user{
-        username
-        token
-      }
-      errors{
-        message
-      }
-    }
-  }
-`;
 
 export default function Login() {
   const context = useContext(AuthContext);

@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider,createHttpLink} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
 import '../src/css/index.css';
 import * as React from "react";
@@ -11,15 +11,14 @@ import {
 import { AuthProvider } from './context/authContext'; 
  
 import App from "./App";
-import Inventory from "./pages/inventory";
-import ShoppingList from "./pages/shoppingList";
-import AddProduct from "./pages/addProduct";
+import Inventory from "./pages/Inventory";
+import ShoppingList from "./pages/ShoppingList";
+import AddProduct from "./pages/AddProduct";
 import Login from './pages/LoginUser';
-import Products from './pages/products';
+import Products from './pages/Products';
 
-const client = new ApolloClient({
+const httpLink = createHttpLink({
   uri: 'http://localhost:3001/graphql?',
-  cache: new InMemoryCache(),
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -29,6 +28,11 @@ const authLink = setContext((_, { headers }) => {
       authorization: localStorage.getItem('token') || "",
     },
   };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
 });
 
 
