@@ -6,56 +6,8 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useQuery, useMutation, gql } from '@apollo/client';
-
-//graphql queries
-const GET_PRODUCTS = gql`
-  query getProducts {
-    getProducts {
-      _id
-      name
-      description
-      quantity
-      minQuantity
-      unit
-    }
-  }
-`;
-
-//graphql queries
-const GET_LIST = gql`
-  query getShoppingList {
-    getShoppingList {
-      _id
-      name
-      quantity
-    }
-  }
-`;
-
-const UPDATE_PRODUCT = gql`
-  mutation updateProduct($id: ID!, $productUpdateInput: ProductUpdateInput!) {
-    updateProduct(id: $id, productUpdateInput: $productUpdateInput) {
-      product {
-      _id
-      name
-      description
-      quantity
-      minQuantity
-      unit
-      }
-      errors {
-        message
-      }
-    }
-  }
-`;
-
-const DELETE_PRODUCT = gql`
-  mutation deleteProduct($id: ID!){
-    deleteProduct(id: $id)
-  }
-`
+import { useQuery, useMutation } from '@apollo/client';
+import { GET_PRODUCTS, GET_LIST, UPDATE_PRODUCT, DELETE_PRODUCT } from '../utility/graphql';
 
 const TableCell = ({ getValue, row, column, table }) => {
   const initialValue = getValue()

@@ -1,48 +1,8 @@
 import {useForm} from '../utility/hook';
-import { useMutation, gql } from '@apollo/client';
+import { useMutation} from '@apollo/client';
 import {useState} from 'react';
 import '../../src/css/forms.css';
-
-// GraphQL mutation
-const CREATE_PRODUCT = gql`
-  mutation createProduct($productInput: ProductInput!) {
-    createProduct(productInput: $productInput) {
-      product{
-        name
-        quantity
-        minQuantity
-        unit
-      }
-      errors {
-        message
-      }
-    }
-  }
-`;
-//graphql queries
-const GET_PRODUCTS = gql`
-  query getProducts {
-    products {
-      _id
-      name
-      description
-      quantity
-      minQuantity
-      unit
-    }
-  }
-`;
-
-//graphql queries
-const GET_LIST = gql`
-  query getShoppingList {
-    getShoppingList {
-      _id
-      name
-      quantity
-    }
-  }
-`;
+import { CREATE_PRODUCT, GET_PRODUCTS, GET_LIST } from '../utility/graphql';
 
 export default function AddProduct() {
   const [errors, setErrors] = useState({});

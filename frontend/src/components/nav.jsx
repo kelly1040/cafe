@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from "react-router-dom";
-import { ReactComponent as Waffle } from '../../src/assests/waffle_icon.svg';
+import { ReactComponent as Waffle } from '../../src/assets/waffleIcon.svg';
 import { useState, useContext } from "react";
 import '../../src/css/nav.css';
 import { AuthContext } from '../../src/context/authContext.jsx';

@@ -1,48 +1,13 @@
 import { useState, useEffect } from "react";
 import '../../src/css/tables.css';
+import { GET_PRODUCTS, GET_LIST, UPDATE_PRODUCT_QUANTITY } from '../utility/graphql';
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { useQuery, useMutation, gql } from '@apollo/client';
-
-//graphql queries
-const GET_PRODUCTS = gql`
-  query getProducts {
-    getProducts {
-      _id
-      name
-      quantity
-      unit
-    }
-  }
-`;
-
-//graphql queries
-const GET_LIST = gql`
-  query getShoppingList {
-    getShoppingList {
-      _id
-      name
-      quantity
-    }
-  }
-`;
-
-const UPDATE_PRODUCT_QUANTITY = gql`
-    mutation updateProductQuantity($id: ID!, $quantity: Float!) {
-        updateProductQuantity(id: $id, quantityUpdate: {quantity: $quantity}) {
-          product{
-            quantity
-          }
-          errors{
-            message
-          }
-        }
-    }
-`;
+import { useQuery, useMutation} from '@apollo/client';
 
 const TableCell = ({ getValue, row, column, table }) => {
   const initialValue = getValue()
