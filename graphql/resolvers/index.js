@@ -47,7 +47,6 @@ module.exports = CreateResolvers = {
                 unit: args.productInput.unit,
                 category: args.productInput.category
             });
-        
             await newProduct.save()
             return { 
                 product: {...newProduct._doc, _id: newProduct.id },
@@ -59,7 +58,7 @@ module.exports = CreateResolvers = {
                     user: null,
                     errors: [
                       {
-                        message: err.message || 'An error occurred during login',
+                        message: err.message || 'An error occurred',
                         code: err.extensions && err.extensions.code ? err.extensions.code : 'INTERNAL_SERVER_ERROR',
                       },
                     ],

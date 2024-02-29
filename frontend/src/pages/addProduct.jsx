@@ -1,6 +1,7 @@
 import {useForm} from '../utility/hook';
 import { useMutation, gql } from '@apollo/client';
 import {useState} from 'react';
+import '../../src/css/forms.css';
 
 // GraphQL mutation
 const CREATE_PRODUCT = gql`
@@ -82,7 +83,7 @@ export default function AddProduct() {
   }
 
  return(
-  <div>
+  <div className="page">
     <form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
       <h1>Add Product</h1>
       {errors.errors && (

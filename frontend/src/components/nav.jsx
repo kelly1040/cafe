@@ -7,7 +7,6 @@ import { AuthContext } from '../../src/context/authContext.jsx';
 export default function NavBar() {
     const [showNav, setShowNav] = useState(false);
     const { user, logout} = useContext(AuthContext);
-    console.log(user);
     const handleShowNavbar = () => {
         setShowNav(!showNav)
       };
@@ -21,19 +20,20 @@ export default function NavBar() {
                   <div className="homepage">
                       <NavLink to="/">Home</NavLink>
                   </div>
-                  <div className="menu-icon" onClick={handleShowNavbar}>
-                      menu<Waffle />
-                  </div>
                   <div className={`nav-elements  ${showNav && 'active'}`}>
                     <NavLink to="/inventory">Inventory</NavLink>
                     <NavLink to="/shoppingList">Shopping List</NavLink>
                     {user.username === "manager" && 
                     <>
                     <NavLink to="/addProduct">Add Product</NavLink>
-                    <NavLink to="/products">All Products</NavLink>
+                    <NavLink to="/products" className="webOnly">All Products</NavLink>
                     </>
                     }
-                    <button onClick={logout}>Logout</button>
+                    <button className='logout' onClick={logout}>Logout</button>
+
+                  </div>
+                  <div className="menu-icon" onClick={handleShowNavbar}>
+                      menu<Waffle />
                   </div>
                 </div>
             </nav>

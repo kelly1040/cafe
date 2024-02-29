@@ -7,20 +7,26 @@
   align-items: center;
 }
 
-.login form, label, input {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.login input {
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  border: 1px solid #6e8898;
+  width: 40%;
+}
+
+.login form, .form-group, label, input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 @media (max-width: 600px) {
   .login {
     font-size: large;
+    display: flex;
   }
   .label {
     font-size: 100px;
   }
-}
-.error-messages{
-  color: red;
 }

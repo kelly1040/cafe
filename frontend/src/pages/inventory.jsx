@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import '../../src/css/tables.css';
 import {
   createColumnHelper,
   flexRender,
@@ -221,9 +222,9 @@ export default function ShoppingList() {
   };
   const filteredProducts = filterProducts(data.products);
   return (
-    <div>
+    <div className="page">
       <h1>Inventory List</h1>
-      <input type="text" placeholder="Search for a product" 
+      <input type="text" placeholder="Search for a product" className="searchBar"
       value={searchInput} onChange={(e) => setSearchInput(e.target.value)}/>
       <Table data={filteredProducts} />
     </div>

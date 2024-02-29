@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import '../../src/css/table.css';
+import '../../src/css/tables.css';
 
 import {
   createColumnHelper,
@@ -235,9 +235,10 @@ export default function ShoppingList() {
   };
   const filteredProducts = filterProducts(data.getShoppingList);
   return (
-    <div>
+    <div className="page">
       <h1>Shopping List</h1>
-      <input type="text" placeholder="Search for products" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)}/>
+      <input type="text" placeholder="Search for products" className="searchBar"
+      value={searchInput} onChange={(e)=>setSearchInput(e.target.value)}/>
       <Table data={filteredProducts} />
     </div>
   );

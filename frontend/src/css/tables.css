@@ -1,0 +1,53 @@
+table {
+    margin: 2% 0;
+    padding: 0;
+    width: 50%;
+}
+
+thead{
+    font-weight: 600;
+    font-size: 22px;
+}
+
+tbody{
+    text-align: center;
+}
+@media (max-width: 600px) {
+    table {
+        font-weight: 400;
+        width: 90%;
+    }
+    thead{
+        font-weight: 600;
+        font-size: 18px;
+    }
+    .incrementButton{
+        margin: 2%;
+      }
+    button{
+        margin: 2%;
+    }
+    input{
+        margin: 2%;
+        width:80%;
+    }
+    .searchBar{
+        width: 90%;
+    }
+}
+.incrementButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+  }
+
+.searchBar{
+    width: 30%;
+}
+
+input{
+    width:10%;
+    text-align: center;
+}
+
