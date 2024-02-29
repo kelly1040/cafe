@@ -4,7 +4,7 @@ module.exports = buildSchema(`
         type Product {
             _id: ID!
             name: String!
-            description: String!
+            description: String
             minQuantity: Float!
             quantity: Float!
             unit: String!
@@ -35,6 +35,11 @@ module.exports = buildSchema(`
 
         type UpdateProductPayload{
             product: Product
+            errors: [Error]
+        }
+
+        type CreateUserPayload{
+            user:User
             errors: [Error]
         }
 
@@ -71,14 +76,14 @@ module.exports = buildSchema(`
         }
 
         type RootQuery {
-            products: [Product!]!
+            getProducts: [Product!]!
             getShoppingList: [Product]!
             users: [User]!
         }
 
         type RootMutation {
             createProduct(productInput: ProductInput): CreateProductPayload
-            createUser(userInput: UserInput): User
+            createUser(userInput: UserInput): CreateUserPayload
             updateProductQuantity(id: ID!, quantityUpdate: ProductQuantityUpdate): UpdateQuantityPayload
             updateProduct(id: ID!, productUpdateInput: ProductUpdateInput): UpdateProductPayload
             loginUser(userInput: UserInput): AuthPayload

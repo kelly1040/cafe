@@ -11,7 +11,7 @@ import { useQuery, useMutation, gql } from '@apollo/client';
 //graphql queries
 const GET_PRODUCTS = gql`
   query getProducts {
-    products {
+    getProducts {
       _id
       name
       quantity
@@ -225,7 +225,7 @@ export default function ShoppingList() {
       product.name.toLowerCase().includes(searchInput.toLowerCase())
     );
   };
-  const filteredProducts = filterProducts(data.products);
+  const filteredProducts = filterProducts(data.getProducts);
   return (
     <div className="page">
       <h1>Inventory List</h1>

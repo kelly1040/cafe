@@ -5,7 +5,7 @@ const User = require('../../models/user');
 const { GraphQLError } = require('graphql');
 
 module.exports = CreateResolvers = {
-    products: async () => {
+    getProducts: async () => {
       try{
         const products = await Product.find()
               return products.map(product => {

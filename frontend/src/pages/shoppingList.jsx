@@ -25,7 +25,7 @@ const GET_LIST = gql`
 //graphql queries
 const GET_PRODUCTS = gql`
   query getProducts {
-    products {
+    getProducts {
       _id
       name
       quantity
