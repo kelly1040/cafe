@@ -5,29 +5,27 @@ const User = require('../../models/user');
 const { GraphQLError } = require('graphql');
 
 module.exports = CreateResolvers = {
-    products: () => {
-        return Product.find().then(
-            products => {
-                return products.map(product => {
-                    return {...product._doc, _id: product.id};
-                });
-            }
-        ).catch(err => {
+    products: async () => {
+      try{
+        const products = await Product.find()
+              return products.map(product => {
+                  return {...product._doc, _id: product.id};
+              });
+            } catch(err) {
             console.log(err);
             throw err;
-        })
+        }
     },
-    getShoppingList: () => {
-            return Product.find().then(
-                products => {
-                    return products
-                    .filter(product => product.quantity < product.minQuantity)
-                    .map(product => ({ ...product._doc, _id: product.id }));
-                }
-            ).catch(err => {
-                console.log(err);
-                throw err;
-            })
+    getShoppingList: async () => {
+      try{
+           const products = await Product.find()
+              return products
+                .filter(product => product.quantity < product.minQuantity)
+                .map(product => ({ ...product._doc, _id: product.id }));
+          }catch(err) {
+              console.log(err);
+              throw err;
+          }
         },
     createProduct: async (args) => {
         try{
@@ -60,31 +58,43 @@ module.exports = CreateResolvers = {
                       {
                         message: err.message || 'An error occurred',
                         code: err.extensions && err.extensions.code ? err.extensions.code : 'INTERNAL_SERVER_ERROR',
-                      },
-                    ],
-                  };
+                      }]};
             };
     },
-    updateProductQuantity: (args) => {
-        return Product.findById(args.id).then(product => {
+    updateProductQuantity: async (args) => {
+      try{
+        product = await Product.findById(args.id)
             if (!product) {
-                throw new Error('Product not found');
+                throw new GraphQLError('Product not found'), {
+                  extensions: {
+                    code: 'BAD_USER_INPUT',
+                  }
+                }};
+          product.quantity = args.quantityUpdate.quantity;
+          await product.save();
+          return {
+            product: {...product._doc, _id: product.id},
+            errors: []};
+      }catch(err) {
+          return {
+          product: null,
+          errors: [
+            {
+              message: err.message || 'An error occurred',
+              code: err.extensions.code || 'INTERNAL_SERVER_ERROR',
+            },
+          ]}
+      };
+      },
+    updateProduct: async (args) => {
+      try{
+        const product = await Product.findById(args.id)
+          if (!product) {
+          throw new GraphQLError('Product not found'), {
+            extensions: {
+              code: 'BAD_USER_INPUT',
             }
-            product.quantity = args.quantityUpdate.quantity;
-            return product.save();
-        }).then(result => { 
-            return {...result._doc, _id: result.id};
-        }
-        ).catch(err => {
-            console.log(err);
-            throw err;
-        });
-    },
-    updateProduct:(args) => {
-        return Product.findById(args.id).then(product => {
-            if (!product) {
-                throw new Error('Product not found');
-            }
+          }};
             if (args.productUpdateInput.name != undefined){
                 product.name = args.productUpdateInput.name
             }
@@ -100,26 +110,34 @@ module.exports = CreateResolvers = {
             if (args.productUpdateInput.unit != undefined){
                 product.unit = args.productUpdateInput.unit
             }
-            return product.save();
-            }).then(result => { 
-                return {...result._doc, _id: result.id};
-            }
-            ).catch(err => {
-                console.log(err);
-                throw err;
-            });            
+          await product.save();
+          return {
+            product: {...product._doc, _id: product.id},
+            errors: []};
+          }catch(err){
+            return {
+              product: null,
+              errors: [
+                {
+                  message: err.message || 'An error occurred',
+                  code: err.extensions.code || 'INTERNAL_SERVER_ERROR',
+                },
+              ]}
+          };            
     },
-    deleteProduct: (args) => {
-        const productId = args.id;
-        if (!productId) {
+    deleteProduct: async (args) => {
+      const productId = args.id;
+      if (!productId) {
           throw new Error("Invalid or missing product ID");
-        }
-        return Product.findByIdAndDelete({ _id: productId })
-          .then(() => true)
-          .catch((err) => {
-            throw err;
-          });
-      },
+      }
+      try {
+          await Product.findByIdAndDelete(productId);
+          return true;
+      } catch (err) {
+          console.log(err);
+          throw new Error("Error deleting product");
+      }
+  },
     createUser: async (_, args) => {
         const existingUser = await User.findOne({username: args.userInput.username})
             if (existingUser) {

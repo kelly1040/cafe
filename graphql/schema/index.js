@@ -23,12 +23,17 @@ module.exports = buildSchema(`
             errors: [Error]
         }
 
-        type updateQuantityPayload{
+        type UpdateQuantityPayload{
             product: Product
             errors: [Error]
         }
 
-        type createProductPayload{
+        type CreateProductPayload{
+            product: Product
+            errors: [Error]
+        }
+
+        type UpdateProductPayload{
             product: Product
             errors: [Error]
         }
@@ -72,10 +77,10 @@ module.exports = buildSchema(`
         }
 
         type RootMutation {
-            createProduct(productInput: ProductInput): createProductPayload
+            createProduct(productInput: ProductInput): CreateProductPayload
             createUser(userInput: UserInput): User
-            updateProductQuantity(id: ID!, quantityUpdate: ProductQuantityUpdate): Product
-            updateProduct(id: ID!, productUpdateInput: ProductUpdateInput): Product
+            updateProductQuantity(id: ID!, quantityUpdate: ProductQuantityUpdate): UpdateQuantityPayload
+            updateProduct(id: ID!, productUpdateInput: ProductUpdateInput): UpdateProductPayload
             loginUser(userInput: UserInput): AuthPayload
             deleteProduct(id:ID!): Boolean
         }

@@ -34,7 +34,12 @@ const GET_LIST = gql`
 const UPDATE_PRODUCT_QUANTITY = gql`
     mutation updateProductQuantity($id: ID!, $quantity: Float!) {
         updateProductQuantity(id: $id, quantityUpdate: {quantity: $quantity}) {
+          product{
             quantity
+          }
+          errors{
+            message
+          }
         }
     }
 `;

@@ -36,12 +36,17 @@ const GET_LIST = gql`
 const UPDATE_PRODUCT = gql`
   mutation updateProduct($id: ID!, $productUpdateInput: ProductUpdateInput!) {
     updateProduct(id: $id, productUpdateInput: $productUpdateInput) {
+      product {
       _id
       name
       description
       quantity
       minQuantity
       unit
+      }
+      errors {
+        message
+      }
     }
   }
 `;
