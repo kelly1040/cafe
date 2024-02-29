@@ -11,11 +11,11 @@ import {
 import { AuthProvider } from './context/authContext'; 
  
 import App from "./App";
-import Inventory from "./pages/Inventory";
-import ShoppingList from "./pages/ShoppingList";
-import AddProduct from "./pages/AddProduct";
+import Inventory from "./pages/inventory";
+import ShoppingList from "./pages/shoppingList";
+import AddProduct from "./pages/addProduct";
 import Login from './pages/LoginUser';
-import Products from './pages/Products';
+import Products from './pages/products';
 
 const client = new ApolloClient({
   uri: 'http://localhost:3001/graphql?',

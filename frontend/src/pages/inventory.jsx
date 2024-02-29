@@ -178,7 +178,7 @@ function Table({ data }) {
   );
 };
 
-export default function ShoppingList() {
+export default function Products() {
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
     refetchQueries: [{ query: GET_PRODUCTS}, {query: GET_LIST }],
   });
