@@ -19,15 +19,18 @@ tbody{
     align-items: center;
     flex-direction: row;
   }
-
-.searchBar{
+.page .editCell{
     width: fit-content;
+}
+.page .searchBar{
+    width: 30%;
 }
 
 .page input{
-    width:60%;
+    width:10%;
     text-align: center;
 }
+
 
 @media (max-width: 600px) {
     table {

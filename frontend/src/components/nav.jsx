@@ -17,9 +17,9 @@ export default function NavBar() {
           <main>
             <nav>
                 <div className="container">
-                  <div className="homepage">
+                  {/* <div className="homepage">
                       <NavLink to="/">Home</NavLink>
-                  </div>
+                  </div> */}
                   <div className={`nav-elements  ${showNav && 'active'}`}>
                     <NavLink to="/inventory">Inventory</NavLink>
                     <NavLink to="/shoppingList">Shopping List</NavLink>

@@ -79,6 +79,7 @@ const TableCell = ({ getValue, row, column, table }) => {
     ) : (
         <input
           value={value}
+          className="editCell"
           onChange={(e) => setValue(e.target.value)}
           onBlur={onBlur}
           type={columnMeta?.type || "text"}
