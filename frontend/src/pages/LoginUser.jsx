@@ -1,22 +1,20 @@
-import {useContext, useState} from 'react';
+import { useContext, useState } from 'react';
 import '../../src/css/login.css';
-import {useMutation} from '@apollo/client';
-import {useForm} from '../utility/hook';
-import {AuthContext} from '../context/authContext';
-import {useNavigate} from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { useForm } from '../utility/hook';
+import { AuthContext } from '../context/authContext';
+import { useNavigate } from 'react-router-dom';
 import { LOGIN_USER } from '../utility/graphqlQueries';
-
 
 export default function Login() {
   const context = useContext(AuthContext);
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
-  const {onChange, onSubmit, values} = useForm(loginUserCallback, {
+  const { onChange, onSubmit, values } = useForm(loginUserCallback, {
     username: '',
-    password: '',
+    password: ''
   });
-
 
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
     update(_, { data }) {
@@ -30,16 +28,16 @@ export default function Login() {
         setErrors(userData);
       }
     },
-      onError(error) {
-        console.error(error);
-        // Handle unexpected errors
-      },
+    onError(error) {
+      console.error(error);
+      // Handle unexpected errors
+    },
     variables: {
       userInput: {
-      username: values.username,
-      password: values.password,
+        username: values.username,
+        password: values.password
       }
-    },
+    }
   });
   //if (error) return `Submission error! ${error.message}`;
   function loginUserCallback() {
@@ -58,7 +56,7 @@ export default function Login() {
             value={values.username}
             onChange={onChange}
           />
-        </div>  
+        </div>
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
@@ -75,7 +73,7 @@ export default function Login() {
             </div>
           )}
         </div>
-        <button type='submit'>Login</button>
+        <button type="submit">Login</button>
       </form>
     </div>
   );

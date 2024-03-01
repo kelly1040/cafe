@@ -1,38 +1,49 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import '../../src/css/tables.css';
-import { GET_PRODUCTS, GET_LIST, UPDATE_PRODUCT_QUANTITY } from '../utility/graphqlQueries';
+import {
+  GET_PRODUCTS,
+  GET_LIST,
+  UPDATE_PRODUCT_QUANTITY
+} from '../utility/graphqlQueries';
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { useQuery, useMutation} from '@apollo/client';
-import { TableCell } from "../components/tableCell";
-import { EditCell } from "../components/EditCell";
+  useReactTable
+} from '@tanstack/react-table';
+import { useQuery, useMutation } from '@apollo/client';
+import { TableCell } from '../components/TableCell';
+import { EditCell } from '../components/EditCell';
 
 // Table component, renders the table
 function Table({ data }) {
   const [replenishClicked, setReplenishClicked] = useState(false);
   const columnHelper = createColumnHelper();
   const columns = [
-    columnHelper.accessor("name", {
-      header: "Product Name",
+    columnHelper.accessor('name', {
+      header: 'Product Name'
     }),
-    columnHelper.accessor("required", {
-      header: replenishClicked ? "Replenish Quantity" : "Quantity Needed",
-      cell: (props) => <TableCell {...props} updateProductQuantity={updateProductQuantity} />,
+    columnHelper.accessor('required', {
+      header: replenishClicked ? 'Replenish Quantity' : 'Quantity Needed',
+      cell: (props) => (
+        <TableCell {...props} updateProductQuantity={updateProductQuantity} />
+      )
     }),
-    columnHelper.accessor("unit", {
-        header: "Unit",
-      }),
+    columnHelper.accessor('unit', {
+      header: 'Unit'
+    }),
     columnHelper.display({
-        header: "Replenish",
-      id: "edit",
-      cell: (props) => <EditCell {...props} updateProductQuantity={updateProductQuantity} 
-                        setReplenishClicked={setReplenishClicked}
-                        buttonName="Replenish" />,
-    }),
+      header: 'Replenish',
+      id: 'edit',
+      cell: (props) => (
+        <EditCell
+          {...props}
+          updateProductQuantity={updateProductQuantity}
+          setReplenishClicked={setReplenishClicked}
+          buttonName="Replenish"
+        />
+      )
+    })
   ];
 
   const calculateDefaultQuantities = (data) => {
@@ -40,15 +51,17 @@ function Table({ data }) {
       return {
         ...row,
         quantity: row.quantity, // Set the default value
-        required: Math.ceil(row.minQuantity - row.quantity), // Calculate the default value
+        required: Math.ceil(row.minQuantity - row.quantity) // Calculate the default value
       };
     });
   };
 
-  const [tableData, setTableData] = useState(() => calculateDefaultQuantities([...data]));
+  const [tableData, setTableData] = useState(() =>
+    calculateDefaultQuantities([...data])
+  );
   const [editedRows, setEditedRows] = useState({});
   const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY, {
-    refetchQueries: [{ query: GET_LIST }, { query: GET_PRODUCTS }],
+    refetchQueries: [{ query: GET_LIST }, { query: GET_PRODUCTS }]
   });
 
   useEffect(() => {
@@ -68,14 +81,14 @@ function Table({ data }) {
             if (index === rowIndex) {
               return {
                 ...old[rowIndex],
-                [columnId]: value,
+                [columnId]: value
               };
             }
             return row;
           })
         );
-      },
-    },
+      }
+    }
   });
 
   return (
@@ -109,11 +122,11 @@ function Table({ data }) {
       </tbody>
     </table>
   );
-};
+}
 
 export default function ShoppingList() {
   const { loading, error, data } = useQuery(GET_LIST, {
-    refetchQueries: [{ query: GET_LIST} , {query: GET_PRODUCTS}],
+    refetchQueries: [{ query: GET_LIST }, { query: GET_PRODUCTS }]
   });
   const [searchInput, setSearchInput] = useState('');
   if (loading) return <p>Loading...</p>;
@@ -127,8 +140,13 @@ export default function ShoppingList() {
   return (
     <div className="page">
       <h1>Shopping List</h1>
-      <input type="text" placeholder="Search for products" className="searchBar"
-      value={searchInput} onChange={(e)=>setSearchInput(e.target.value)}/>
+      <input
+        type="text"
+        placeholder="Search for products"
+        className="searchBar"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+      />
       <Table data={filteredProducts} />
     </div>
   );

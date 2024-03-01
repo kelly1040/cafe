@@ -1,29 +1,37 @@
-import {useForm} from '../utility/hook';
-import { useMutation} from '@apollo/client';
-import {useState} from 'react';
+import { useForm } from '../utility/hook';
+import { useMutation } from '@apollo/client';
+import { useState } from 'react';
 import '../../src/css/forms.css';
-import { CREATE_PRODUCT, GET_PRODUCTS, GET_LIST } from '../utility/graphqlQueries';
+import {
+  CREATE_PRODUCT,
+  GET_PRODUCTS,
+  GET_LIST
+} from '../utility/graphqlQueries';
 
 export default function AddProduct() {
   const [errors, setErrors] = useState({});
-  const {onChange, onSubmit, values, resetForm} = useForm(addProductCallback, {
-    name: '',
-    description: '',
-    quantity: '',
-    minQuantity: '',
-    unit: '',
-  });
-  
+
+  const { onChange, onSubmit, values, resetForm } = useForm(
+    addProductCallback,
+    {
+      name: '',
+      description: '',
+      quantity: '',
+      minQuantity: '',
+      unit: ''
+    }
+  );
+
   const [addProduct, { loading }] = useMutation(CREATE_PRODUCT, {
     update(_, { data }) {
       const { createProduct: productData } = data || {};
       if (productData.product) {
-        // added product succesfully
-        resetForm() // empty input fields
-        setErrors({})  // reset error
-      }else{
-        // has an error 
-        setErrors(productData);
+        resetForm();
+        setErrors({});
+      } else {
+        // has an error
+        setErrors({});
+        setErrors({ ...errors, name: [productData.errors[0].message] });
       }
     },
     variables: {
@@ -32,78 +40,82 @@ export default function AddProduct() {
         description: values.description,
         quantity: parseFloat(values.quantity),
         minQuantity: parseFloat(values.minQuantity),
-        unit: values.unit,
-      },
+        unit: values.unit
+      }
     },
-      refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }],
-    });
-    
+    refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }]
+  });
+
+  const validateForm = () => {
+    const requiredFields = formFields.filter(
+      (field) => field.require === 'true'
+    );
+    const missingFields = requiredFields.filter((field) => !values[field.name]);
+
+    if (missingFields.length > 0) {
+      missingFields.forEach((field) => {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [field.name]: 'Input Required'
+        }));
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   function addProductCallback() {
-    addProduct();
+    setErrors({});
+    if (validateForm()) {
+      setErrors({});
+      addProduct();
+    }
   }
 
- return(
-  <div className="page">
-    <form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
-      <h1>Add Product</h1>
-      {errors.errors && (
-            <div className="error-messages">
-              {errors.errors.map((error, index) => (
-                <p key={index}>{error.message}</p>
-              ))}
+  // add the input fields needed
+  const formFields = [
+    { label: 'Name', type: 'text', name: 'name', require: 'true' },
+    { label: 'Description', type: 'text', name: 'description' },
+    {
+      label: 'Quantity',
+      type: 'number',
+      name: 'quantity',
+      min: '0',
+      require: 'true'
+    },
+    {
+      label: 'Minimum Quantity',
+      type: 'number',
+      name: 'minQuantity',
+      min: '1',
+      require: 'true'
+    },
+    { label: 'Unit', type: 'text', name: 'unit', require: 'true' }
+  ];
+
+  return (
+    <div className="page">
+      <form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
+        <h1>Add Product</h1>
+        {formFields.map((field, index) => {
+          return (
+            <div key={index} className="form-group">
+              <label htmlFor={field.name}>{field.label}</label>
+              <input
+                typeof={field.type}
+                name={field.name}
+                value={values[field.name]}
+                min={field.min}
+                onChange={onChange}
+                required={field.require === 'true'}
+              />
+              <span className="error-messages">{errors[field.name]}</span>
             </div>
-        )}
-      <div className="form-group">
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          name="name"
-          value={values.name}
-          onChange={onChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="description">Description</label>
-        <input
-          type="text"
-          name="description"
-          value={values.description}
-          onChange={onChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="quantity">Quantity</label>
-        <input
-          type="number"
-          name="quantity"
-          min='0'
-          value={values.quantity}
-          onChange={onChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="minQuantity">Minimum Quantity</label>
-        <input
-          type="number"
-          name="minQuantity"
-          min='1'
-          value={values.minQuantity}
-          onChange={onChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="unit">Unit</label>
-        <input
-          type="text"
-          name="unit"
-          value={values.unit}
-          onChange={onChange}
-        />
-      </div>
-      <button type="submit">Add Product</button>
-    </form>
-  </div>
- )
+          );
+        })}
+        <button type="submit">Add Product</button>
+      </form>
+    </div>
+  );
 }
-
-

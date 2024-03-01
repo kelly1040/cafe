@@ -1,74 +1,75 @@
-import { ApolloClient, InMemoryCache, ApolloProvider,createHttpLink} from '@apollo/client';
-import {setContext} from '@apollo/client/link/context';
-import '../src/css/index.css';
-import * as React from "react";
-import * as ReactDOM from "react-dom";
 import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+import '../src/css/index.css';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { AuthProvider } from './context/authContext'; 
- 
-import App from "./App";
-import Inventory from "./pages/Inventory";
-import ShoppingList from "./pages/ShoppingList";
-import AddProduct from "./pages/AddProduct";
+import { AuthProvider } from './context/authContext';
+
+import App from './App';
+import Inventory from './pages/Inventory';
+import ShoppingList from './pages/ShoppingList';
+import AddProduct from './pages/AddProduct';
 import Login from './pages/LoginUser';
 import Products from './pages/Products';
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3001/graphql?',
+  uri: 'http://localhost:3001/graphql?'
 });
 
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: localStorage.getItem('token') || "",
-    },
+      authorization: localStorage.getItem('token') || ''
+    }
   };
 });
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache()
 });
-
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: [
       {
-        path: "/inventory",
+        path: '/inventory',
         element: <Inventory />
       },
       {
-        path: "/shoppingList",
+        path: '/shoppingList',
         element: <ShoppingList />
       },
       {
-        path: "/addProduct",
+        path: '/addProduct',
         element: <AddProduct />
       },
       {
-        path: "/products",
+        path: '/products',
         element: <Products />
       },
       {
-        path: "/login",
+        path: '/login',
         element: <Login />
       }
-    ],
-  },
+    ]
+  }
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthProvider>
-  <ApolloProvider client={client}>
-      <RouterProvider router={router}/>
-  </ApolloProvider>
+    <ApolloProvider client={client}>
+      <RouterProvider router={router} />
+    </ApolloProvider>
   </AuthProvider>
 );

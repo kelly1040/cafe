@@ -1,41 +1,53 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import '../../src/css/tables.css';
-import { GET_PRODUCTS, GET_LIST, UPDATE_PRODUCT_QUANTITY } from '../utility/graphqlQueries';
+import {
+  GET_PRODUCTS,
+  GET_LIST,
+  UPDATE_PRODUCT_QUANTITY
+} from '../utility/graphqlQueries';
 import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { useQuery, useMutation} from '@apollo/client';
-import { TableCell } from "../components/tableCell";
-import { EditCell } from "../components/EditCell";
+  useReactTable
+} from '@tanstack/react-table';
+import { useQuery, useMutation } from '@apollo/client';
+import { TableCell } from '../components/TableCell';
+import { EditCell } from '../components/EditCell';
 
 // Table component, renders the table
 function Table({ data }) {
   const columnHelper = createColumnHelper();
   const columns = [
-    columnHelper.accessor("name", {
-      header: "Product Name",
+    columnHelper.accessor('name', {
+      header: 'Product Name'
     }),
-    columnHelper.accessor("quantity", {
-      header: "Quantity",
-      cell: (props) => <TableCell {...props} updateProductQuantity={updateProductQuantity} />,
+    columnHelper.accessor('quantity', {
+      header: 'Quantity',
+      cell: (props) => (
+        <TableCell {...props} updateProductQuantity={updateProductQuantity} />
+      )
     }),
-    columnHelper.accessor("unit", {
-      header: "Unit",
+    columnHelper.accessor('unit', {
+      header: 'Unit'
     }),
     columnHelper.display({
-      header: "Update",
-      id: "edit",
-      cell: (props) => <EditCell {...props} updateProductQuantity={updateProductQuantity} buttonName="Update"/>,
-    }),
+      header: 'Update',
+      id: 'edit',
+      cell: (props) => (
+        <EditCell
+          {...props}
+          updateProductQuantity={updateProductQuantity}
+          buttonName="Update"
+        />
+      )
+    })
   ];
 
   const [tableData, setTableData] = useState(() => [...data]);
   const [editedRows, setEditedRows] = useState({});
   const [updateProductQuantity] = useMutation(UPDATE_PRODUCT_QUANTITY, {
-    refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }],
+    refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }]
   });
 
   useEffect(() => {
@@ -55,14 +67,14 @@ function Table({ data }) {
             if (index === rowIndex) {
               return {
                 ...old[rowIndex],
-                [columnId]: value,
+                [columnId]: value
               };
             }
             return row;
           })
         );
-      },
-    },
+      }
+    }
   });
 
   return (
@@ -96,11 +108,11 @@ function Table({ data }) {
       </tbody>
     </table>
   );
-};
+}
 
 export default function Products() {
   const { loading, error, data } = useQuery(GET_PRODUCTS, {
-    refetchQueries: [{ query: GET_PRODUCTS}, {query: GET_LIST }],
+    refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }]
   });
   const [searchInput, setSearchInput] = useState('');
   if (loading) return <p>Loading...</p>;
@@ -114,8 +126,13 @@ export default function Products() {
   return (
     <div className="page">
       <h1>Inventory List</h1>
-      <input type="text" placeholder="Search for a product" className="searchBar"
-      value={searchInput} onChange={(e) => setSearchInput(e.target.value)}/>
+      <input
+        type="text"
+        placeholder="Search for a product"
+        className="searchBar"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+      />
       <Table data={filteredProducts} />
     </div>
   );
