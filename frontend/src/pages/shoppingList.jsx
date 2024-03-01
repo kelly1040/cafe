@@ -8,99 +8,19 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useQuery, useMutation} from '@apollo/client';
-
-const TableCell = ({ getValue, row, column, table }) => {
-  const initialValue = getValue()
-  const columnMeta = column.columnDef.meta
-  const tableMeta = table.options.meta
-  const [value, setValue] = useState(initialValue)
-  useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
-  const onBlur = () => {
-    tableMeta?.updateData(row.index, column.id, value)
-  }
-  const onSelectChange = (e) => {
-    setValue(e.target.value)
-    tableMeta?.updateData(row.index, column.id, e.target.value)
-  }
-  const onIncrement = () => {
-    setValue((prevValue) => prevValue + 1);
-    tableMeta?.updateData(row.index, column.id, value + 1);
-  }
-  const onDecrement = () => {
-    if (value > 0) {
-      setValue((prevValue) => prevValue - 1);
-      tableMeta?.updateData(row.index, column.id, value - 1);
-    }
-  }
-
-  if (tableMeta?.editedRows[row.id]) {
-    return columnMeta?.type === "select" ? (
-      <select onChange={onSelectChange} value={initialValue}>
-        {columnMeta?.options?.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    ) : (
-      <div className="incrementButton">
-        <button onClick={onDecrement}>-</button>
-        <input
-          value={value} 
-          onChange={(e) => setValue(e.target.value)}
-          onBlur={onBlur}
-          type={columnMeta?.type || "text"}
-        />
-        <button onClick={onIncrement}>+</button>
-      </div>
-    )
-  }
-  return <span>{value}</span>
-}
-
-const EditCell = ({ row, table, updateProductQuantity }) => {
-  const meta = table.options.meta;
-
-  const setEditedRows = () => {
-    meta?.setEditedRows((old) => ({
-      ...old,
-      [row.id]: !old[row.id],
-    }));
-
-    // Execute GraphQL mutation here
-    const { _id, quantity, required } = row.original;
-    updateProductQuantity({
-      variables: {
-        id: _id,
-        quantity: parseFloat(quantity+required),
-      },
-    });
-  };
-
-  return meta?.editedRows[row.id] ? (
-    <>
-      <button onClick={setEditedRows} name="done">
-        Done
-      </button>
-    </>
-  ) : (
-    <button onClick={() => meta?.setEditedRows((old) => ({ ...old, [row.id]: true }))} name="edit">
-      Replenish
-    </button>
-  );
-};
+import { TableCell } from "../components/tableCell";
+import { EditCell } from "../components/EditCell";
 
 // Table component, renders the table
 function Table({ data }) {
+  const [replenishClicked, setReplenishClicked] = useState(false);
   const columnHelper = createColumnHelper();
   const columns = [
     columnHelper.accessor("name", {
       header: "Product Name",
     }),
     columnHelper.accessor("required", {
-      header: "Quantity Needed",
+      header: replenishClicked ? "Replenish Quantity" : "Quantity Needed",
       cell: (props) => <TableCell {...props} updateProductQuantity={updateProductQuantity} />,
     }),
     columnHelper.accessor("unit", {
@@ -109,7 +29,9 @@ function Table({ data }) {
     columnHelper.display({
         header: "Replenish",
       id: "edit",
-      cell: (props) => <EditCell {...props} updateProductQuantity={updateProductQuantity} />,
+      cell: (props) => <EditCell {...props} updateProductQuantity={updateProductQuantity} 
+                        setReplenishClicked={setReplenishClicked}
+                        buttonName="Replenish" />,
     }),
   ];
 
