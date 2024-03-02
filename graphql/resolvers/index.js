@@ -110,21 +110,13 @@ module.exports = CreateResolvers = {
           })
         );
       }
-      if (args.productUpdateInput.name != undefined) {
-        product.name = args.productUpdateInput.name;
-      }
-      if (args.productUpdateInput.description != undefined) {
-        product.description = args.productUpdateInput.description;
-      }
-      if (args.productUpdateInput.quantity != undefined) {
-        product.quantity = args.productUpdateInput.quantity;
-      }
-      if (args.productUpdateInput.minQuantity != undefined) {
-        product.minQuantity = args.productUpdateInput.minQuantity;
-      }
-      if (args.productUpdateInput.unit != undefined) {
-        product.unit = args.productUpdateInput.unit;
-      }
+      const {productUpdateInput} = args
+      Object.keys(productUpdateInput).forEach(field => {
+        // check to see if there was an update
+        if (productUpdateInput[field] != undefined){
+          product[field] = productUpdateInput[field]
+        } 
+      });
       await product.save();
       return {
         product: { ...product._doc, _id: product.id },
@@ -136,7 +128,10 @@ module.exports = CreateResolvers = {
         errors: [
           {
             message: err.message || 'An error occurred',
-            code: err.extensions.code || 'INTERNAL_SERVER_ERROR'
+            code:               
+            err.extensions && err.extensions.code
+            ? err.extensions.code
+            : 'INTERNAL_SERVER_ERROR'
           }
         ]
       };

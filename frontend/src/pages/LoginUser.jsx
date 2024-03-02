@@ -20,17 +20,11 @@ export default function Login() {
     update(_, { data }) {
       const { loginUser: userData } = data || {};
       if (userData && userData.user) {
-        // Successful login
         context.login(userData.user);
         navigate('/inventory');
       } else {
-        // Login with errors
         setErrors(userData);
       }
-    },
-    onError(error) {
-      console.error(error);
-      // Handle unexpected errors
     },
     variables: {
       userInput: {

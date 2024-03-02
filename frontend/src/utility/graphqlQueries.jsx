@@ -18,7 +18,7 @@ export const CREATE_PRODUCT = gql`
 
 export const GET_PRODUCTS = gql`
   query getProducts {
-    getProducts {
+    getProducts{
       _id
       name
       description

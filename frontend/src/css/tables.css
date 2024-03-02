@@ -38,6 +38,7 @@ tbody {
     table {
         font-weight: 400;
         width: 90%;
+        font-size: 14px;
     }
 
     thead {
@@ -60,6 +61,7 @@ tbody {
     .page input {
         margin: 2%;
         width: 30%;
+        padding: 8% 2%;
     }
 
 }

@@ -116,25 +116,25 @@ function Table({ data }) {
   const columns = [
     columnHelper.accessor('name', {
       header: 'Product Name',
-      cell: (props) => <TableCell {...props} updateProduct={updateProduct} />
+      cell: (props) => <TableCell {...props}/>
     }),
     columnHelper.accessor('description', {
       header: 'Description',
-      cell: (props) => <TableCell {...props} updateProduct={updateProduct} />
+      cell: (props) => <TableCell {...props}/>
     }),
     columnHelper.accessor('quantity', {
       header: 'Quantity',
-      cell: (props) => <TableCell {...props} updateProduct={updateProduct} />,
+      cell: (props) => <TableCell {...props}/>,
       meta: { type: 'number', min: 0 }
     }),
     columnHelper.accessor('minQuantity', {
       header: 'Minimum Quantity',
-      cell: (props) => <TableCell {...props} updateProduct={updateProduct} />,
+      cell: (props) => <TableCell {...props}/>,
       meta: { type: 'number', min: 1 }
     }),
     columnHelper.accessor('unit', {
       header: 'Unit',
-      cell: (props) => <TableCell {...props} updateProduct={updateProduct} />
+      cell: (props) => <TableCell {...props}/>
     }),
     columnHelper.display({
       header: 'Edit',

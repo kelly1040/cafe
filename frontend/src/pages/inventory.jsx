@@ -12,8 +12,8 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { useQuery, useMutation } from '@apollo/client';
-import { TableCell } from '../components/TableCell';
-import { EditCell } from '../components/EditCell';
+import { TableCell } from '../utility/tableCell';
+import { EditCell } from '../utility/editCell';
 
 // Table component, renders the table
 function Table({ data }) {
@@ -24,8 +24,9 @@ function Table({ data }) {
     }),
     columnHelper.accessor('quantity', {
       header: 'Quantity',
+      meta: { type: 'number', min: 0 },
       cell: (props) => (
-        <TableCell {...props} updateProductQuantity={updateProductQuantity} />
+        <TableCell {...props} />
       )
     }),
     columnHelper.accessor('unit', {
