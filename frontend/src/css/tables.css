@@ -4,30 +4,32 @@ table {
     width: 50%;
 }
 
-thead{
+thead {
     font-weight: 600;
     font-size: 22px;
 }
 
-tbody{
+tbody {
     text-align: center;
 }
 
-.incrementButton{
+.incrementButton {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: row;
-  }
-.page .editCell{
+}
+
+.page .editCell {
     width: fit-content;
 }
-.page .searchBar{
+
+.page .searchBar {
     width: 30%;
 }
 
-.page input{
-    width:10%;
+.page input {
+    width: 10%;
     text-align: center;
 }
 
@@ -37,22 +39,27 @@ tbody{
         font-weight: 400;
         width: 90%;
     }
-    thead{
+
+    thead {
         font-weight: 600;
         font-size: 18px;
     }
-    .incrementButton{
-        margin: 2%;
-      }
-    button{
+
+    .incrementButton {
         margin: 2%;
     }
-    .page .searchBar{
+
+    button {
+        margin: 2%;
+    }
+
+    .page .searchBar {
         width: 90%;
     }
-    .page input{
+
+    .page input {
         margin: 2%;
-        width:30%;
+        width: 30%;
     }
 
 }

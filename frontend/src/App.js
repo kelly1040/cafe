@@ -1,6 +1,6 @@
 import { React } from 'react';
 import { useContext } from 'react';
-import NavBar from './components/nav.jsx';
+import NavBar from './components/Nav.jsx';
 import Login from './pages/LoginUser.jsx';
 import { AuthContext } from './context/authContext.jsx';
 

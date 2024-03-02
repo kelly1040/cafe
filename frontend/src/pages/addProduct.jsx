@@ -75,23 +75,34 @@ export default function AddProduct() {
 
   // add the input fields needed
   const formFields = [
-    { label: 'Name', type: 'text', name: 'name', require: 'true' },
-    { label: 'Description', type: 'text', name: 'description' },
+    { label: 'Name *', 
+      type: 'text', 
+      name: 'name', 
+      require: 'true' 
+    },
+    { label: 'Description',
+      type: 'text', 
+      name: 'description' 
+    },
     {
-      label: 'Quantity',
+      label: 'Quantity *',
       type: 'number',
       name: 'quantity',
       min: '0',
       require: 'true'
     },
     {
-      label: 'Minimum Quantity',
+      label: 'Minimum Quantity *',
       type: 'number',
       name: 'minQuantity',
       min: '1',
       require: 'true'
     },
-    { label: 'Unit', type: 'text', name: 'unit', require: 'true' }
+    { label: 'Unit *', 
+      type: 'text', 
+      name: 'unit', 
+      require: 'true' 
+    }
   ];
 
   return (
