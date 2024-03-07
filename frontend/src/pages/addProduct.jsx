@@ -1,6 +1,8 @@
 import { useForm } from '../utility/hook';
 import { useMutation } from '@apollo/client';
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { AuthContext } from '../../src/context/authContext.jsx';
+import { useNavigate } from 'react-router-dom';
 import '../../src/css/forms.css';
 import {
   CREATE_PRODUCT,
@@ -8,8 +10,19 @@ import {
   GET_LIST
 } from '../utility/graphqlQueries';
 
+
+
 export default function AddProduct() {
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const { user } = useContext(AuthContext);
+
+  //check if user has access TODO: add access field to users instead of checking username
+  useEffect(() => {
+    if (user.username !== "manager") {
+      navigate('/inventory');
+    }
+  }, [user.username, navigate]);
 
   const { onChange, onSubmit, values, resetForm } = useForm(
     addProductCallback,
@@ -106,6 +119,7 @@ export default function AddProduct() {
   ];
 
   return (
+
     <div className="page">
       <form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
         <h1>Add Product</h1>

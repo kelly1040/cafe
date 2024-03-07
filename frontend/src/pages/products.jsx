@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
+import { AuthContext } from '../../src/context/authContext.jsx';
+import { useNavigate } from 'react-router-dom';
 import '../../src/css/tables.css';
 import {
   createColumnHelper,
@@ -220,6 +222,16 @@ export default function Products() {
     refetchQueries: [{ query: GET_PRODUCTS }, { query: GET_LIST }]
   });
   const [searchInput, setSearchInput] = useState('');
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
+  //check if user has access TODO: add access field to users instead of checking username
+  useEffect(() => {
+    if (user.username !== "manager") {
+      navigate('/inventory');
+    }
+  }, [user.username, navigate]);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   const filterProducts = (products) => {
