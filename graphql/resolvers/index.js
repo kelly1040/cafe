@@ -41,7 +41,7 @@ module.exports = CreateResolvers = {
         name: args.productInput.name,
         description: args.productInput.description,
         minQuantity: args.productInput.minQuantity,
-        quantity: +args.productInput.quantity,
+        quantity: args.productInput.quantity,
         unit: args.productInput.unit,
         category: args.productInput.category
       });
@@ -150,7 +150,7 @@ module.exports = CreateResolvers = {
       throw new Error('Error deleting product');
     }
   },
-  createUser: async (_, args) => {
+  createUser: async (args) => {
     const existingUser = await User.findOne({
       username: args.userInput.username
     });
@@ -188,6 +188,7 @@ module.exports = CreateResolvers = {
       }
       const token = jwt.sign(
         { userId: user._id, username: user.username },
+        // TODO: Remove to some configuration file
         'somesupersecretkey',
         { expiresIn: '10h' }
       );

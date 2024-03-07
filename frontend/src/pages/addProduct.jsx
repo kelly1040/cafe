@@ -114,7 +114,7 @@ export default function AddProduct() {
             <div key={index} className="form-group">
               <label htmlFor={field.name}>{field.label}</label>
               <input
-                typeof={field.type}
+                type={field.type}
                 name={field.name}
                 value={values[field.name]}
                 min={field.min}

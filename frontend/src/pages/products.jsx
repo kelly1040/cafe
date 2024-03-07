@@ -77,11 +77,9 @@ const EditCell = ({ row, table, updateProduct }) => {
   };
 
   return meta?.editedRows[row.id] ? (
-    <>
       <button onClick={setEditedRows} name="done">
-        Done
+        Save
       </button>
-    </>
   ) : (
     <button
       onClick={() => meta?.setEditedRows((old) => ({ ...old, [row.id]: true }))}

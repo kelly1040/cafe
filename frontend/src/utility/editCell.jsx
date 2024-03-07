@@ -34,7 +34,7 @@ export const EditCell = ({
   return meta?.editedRows[row.id] ? (
     <>
       <button onClick={setEditedRows} name="done">
-        Done
+        Save
       </button>
     </>
   ) : (
